@@ -24,13 +24,9 @@
 
 #include <stdio.h>
 
+static const char NORMAL[] = "\x1b[0m";
 
-static const char NORMAL[] = "\033[0m";
-
-void term_put_normal() {
-	fwrite(NORMAL, sizeof(char), sizeof(NORMAL)-sizeof('\0'), stdout);
-}
-
-int main() {
-	term_put_normal();
+//  Disable terminal attributes
+int term_put_normal() {
+	return fwrite(NORMAL, sizeof(char), sizeof(NORMAL) - sizeof(char), stdout);
 }
