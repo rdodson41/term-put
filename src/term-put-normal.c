@@ -1,7 +1,7 @@
 //  
 //  Name:     rdodson41/term-put/src/term-put-normal.c
 //  Author:   Richard E. Dodson <richard.elias.dodson@gmail.com>
-//  Created:  Thu Nov  5 11:51:56 UTC 2015
+//  Created:  Thu Nov 05 11:51:56 UTC 2015
 //  License:  GNU General Public License, Version 3, 29 June 2007
 //  
 //  Copyright (C) 2015 Richard E. Dodson <richard.elias.dodson@gmail.com>
