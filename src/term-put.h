@@ -25,6 +25,9 @@
 #ifndef TERM_PUT
 #define TERM_PUT
 
+//  Print number of terminal colors to standard output
+int term_put_term_colors(const int term_colors_set, int term_colors);
+
 //  Disable terminal attributes
 int term_put_normal();
 
