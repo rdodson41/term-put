@@ -23,6 +23,7 @@
 //
 
 #include <stdio.h>
+#include <term-put.h>
 
 static const char UNDERLINE[] = "\x1b[4m";
 

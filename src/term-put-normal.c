@@ -23,6 +23,7 @@
 //
 
 #include <stdio.h>
+#include <term-put.h>
 
 static const char NORMAL[] = "\x1b[0m";
 

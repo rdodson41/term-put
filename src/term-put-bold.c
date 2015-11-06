@@ -23,6 +23,7 @@
 //
 
 #include <stdio.h>
+#include <term-put.h>
 
 static const char BOLD[] = "\x1b[1m";
 
