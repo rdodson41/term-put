@@ -26,10 +26,13 @@
 #include <term.h>
 #include <term-put.h>
 
-int term-put-term-colors() {
-	int term_colors = tigetnum("colors");
-	if(term_colors < 0)
-		return term_colors;
-	else
-		return fprintf(stdout, "%d\n", term_colors);
+//  Print number of terminal colors to standard output
+int term_put_term_colors(const int term_colors_set, int term_colors) {
+	if(!term_colors_set) {
+		term_colors = tigetnum("colors");
+		if(term_colors < 0)
+			return term_colors;
+	}
+	int length = fprintf(stdout, "%d\n", term_colors);
+	return length < 0 ? 0 : length;
 }
