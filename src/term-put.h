@@ -35,6 +35,9 @@
 #define FALSE (0)
 #endif
 
+//  Initialize number of terminal colors
+void term_put_term_colors_initialize() {
+
 //  Print number of terminal colors to standard output
 int term_put_term_colors(const int term_colors_set, int term_colors);
 
