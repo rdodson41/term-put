@@ -25,6 +25,16 @@
 #ifndef TERM_PUT
 #define TERM_PUT
 
+//  Define TRUE if it is not already defined
+#ifndef TRUE
+#define TRUE (1)
+#endif
+
+//  Define FALSE if it is not already defined
+#ifndef FALSE
+#define FALSE (0)
+#endif
+
 //  Print number of terminal colors to standard output
 int term_put_term_colors(const int term_colors_set, int term_colors);
 
