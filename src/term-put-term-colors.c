@@ -25,36 +25,48 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <limits.h>
 #include <term.h>
 #include <term-put.h>
 
 static int term_colors_set = FALSE;
 static long term_colors = 0;
 
-//  Initialize number of terminal colors
+//  Initialize terminal colors
 void term_put_term_colors_initialize() {
 	char* value = getenv("TERM_COLORS");
 	if(value != NULL) {
 		errno = 0;
 		term_colors = strtol(value, &value, 0);
 		if(errno == EINVAL)
-			;
-		else if(errno == ERANGE)
-			;
+			LOG(TERM_PUT_WARNING_TERM_COLORS_CONVERSION_FAILURE);
+		else if(errno == ERANGE && term_colors == LONG_MAX)
+			LOG(TERM_PUT_WARNING_TERM_COLORS_OVERFLOW);
+		else if(errno == ERANGE && term_colors == LONG_MIN)
+			LOG(TERM_PUT_WARNING_TERM_COLORS_UNDERFLOW);
 		else if(value[0] != '\0')
-			;
+			LOG(TERM_PUT_WARNING_TERM_COLORS_CONVERSION_FAILURE);
 		else
 			term_colors_set = TRUE;
 	}
 }
 
 //  Print number of terminal colors to standard output
-int term_put_term_colors(const int term_colors_set, int term_colors) {
-	if(!term_colors_set) {
-		term_colors = tigetnum("colors");
-		if(term_colors < 0)
+int term_put_term_colors() {
+	if(term_colors_set) {
+		int length = fprintf(stdout, "%ld\n", term_colors);
+		return length < 0 ? 0 : length;
+	} else {
+		int term_colors = tigetnum("colors");
+		if(term_colors < 0) {
+			if(term_colors == -2)
+				LOG(TERM_PUT_WARNING_TERM_COLORS_UNAVAILABLE);
+			else if(term_colors == -1)
+				LOG(TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED);
 			return term_colors;
+		} else {
+			int length = fprintf(stdout, "%ld\n", term_colors);
+			return length < 0 ? 0 : length;
+		}
 	}
-	int length = fprintf(stdout, "%d\n", term_colors);
-	return length < 0 ? 0 : length;
 }

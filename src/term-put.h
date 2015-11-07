@@ -27,27 +27,17 @@
 
 //  Define TRUE if it is not already defined
 #ifndef TRUE
-#define TRUE (1)
+#define TRUE 1
 #endif
 
 //  Define FALSE if it is not already defined
 #ifndef FALSE
-#define FALSE (0)
+#define FALSE 0
 #endif
 
-//  Initialize number of terminal colors
-void term_put_term_colors_initialize() {
-
-//  Print number of terminal colors to standard output
-int term_put_term_colors(const int term_colors_set, int term_colors);
-
-//  Disable terminal attributes
-int term_put_normal();
-
-//  Enable bold terminal output
-int term_put_bold();
-
-//  Enable underlined terminal output
-int term_put_underline();
+//  Define FWRITE to write a constant string to a file if it is not already defined
+#ifndef FWRITE
+#define FWRITE(FILE, STRING) fwrite((STRING), sizeof(char), sizeof(STRING) - sizeof(char), (FILE))
+#endif
 
 #endif
