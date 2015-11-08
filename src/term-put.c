@@ -148,6 +148,12 @@ int main(int argc, char* argv[]) {
 			else
 				for(ARGUMENT++; OPTION_SHORT != '\0'; ARGUMENT++)
 					term_put_error_option_short_invalid(OPTION_SHORT);
+		else if(strcmp(ARGUMENT, "normal") == 0)
+			term_put_normal();
+		else if(strcmp(ARGUMENT, "bold") == 0)
+			term_put_bold();
+		else if(strcmp(ARGUMENT, "underline") == 0)
+			term_put_underline();
 		else
-			printf("attribute: /%s/\n", ARGUMENT);
+			term_put_error_attribute_invalid(ARGUMENT);
 }
