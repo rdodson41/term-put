@@ -57,37 +57,37 @@ void term_put_error_option_long_invalid(const char* option) {
 	exit(1);
 }
 
-// Print term-put error: Malformed option to standard error and exit
+//  Print term-put error: Malformed option to standard error and exit
 void term_put_error_option_long_malformed(const char* option) {
 	fprintf(stderr, "term-put: error: Malformed option: --%s requires an argument\n", option);
 	exit(1);
 }
 
-// Print term-put error: Invalid option to standard error and exit
+//  Print term-put error: Invalid option to standard error and exit
 void term_put_error_option_short_invalid(const char option) {
 	fprintf(stderr, "term-put: error: Invalid option: -%c\n", option);
 	exit(1);
 }
 
-// Print term-put error: Malformed option to standard error and exit
+//  Print term-put error: Malformed option to standard error and exit
 void term_put_error_option_short_malformed(const char option) {
 	fprintf(stderr, "term-put: error: Malformed option: -%c requires an argument\n", option);
 	exit(1);
 }
 
-// Print term-put error: Invalid attribute to standard error and exit
+//  Print term-put error: Invalid attribute to standard error and exit
 void term_put_error_attribute_invalid(const char* attribute) {
 	fprintf(stderr, "term-put: error: Invalid attribute: %s\n", attribute);
 	exit(1);
 }
 
-// Print term-put error: Malformed attribute to standard error and exit
+//  Print term-put error: Malformed attribute to standard error and exit
 void term_put_error_attribute_malformed(const char* attribute) {
 	fprintf(stderr, "term-put: error: Malformed attribute: %s requires a value\n", attribute);
 	exit(1);
 }
 
-// Print term-put warning: Failed to convert number of terminal colors to a long integer to standard error
+//  Print term-put warning: Failed to convert number of terminal colors to a long integer to standard error
 void term_put_warning_term_colors_conversion_failure(char* term_colors) {
 	fprintf(stderr, "term-put: warning: Failed to convert %s to a long integer\n", term_colors);
 }
