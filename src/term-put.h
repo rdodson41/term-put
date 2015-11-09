@@ -50,11 +50,11 @@ void term_put_error_option_short_malformed(const char option);
 void term_put_error_attribute_invalid(const char* attribute);
 void term_put_error_attribute_malformed(const char* attribute);
 
-void term_put_warning_term_colors_conversion_failure(char* term_colors);
-void term_put_warning_term_colors_overflow(char* term_colors);
-void term_put_warning_term_colors_underflow(char* term_colors);
+void term_put_warning_term_colors_conversion_failure(const char* term_colors);
+void term_put_warning_term_colors_overflow(const char* term_colors);
+void term_put_warning_term_colors_underflow(const char* term_colors);
 void term_put_warning_term_colors_unavailable();
-void term_put_warning_Term_colors_unsupported();
+void term_put_warning_term_colors_unsupported();
 
 void term_put_normal();
 void term_put_bold();
