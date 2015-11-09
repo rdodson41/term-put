@@ -34,18 +34,19 @@ static long term_colors = 0;
 
 //  Initialize terminal colors
 void term_put_term_colors_initialize() {
-	char* value = getenv("TERM_COLORS");
+	static const char TERM_COLORS[] = "TERM_COLORS";
+	char* value = getenv(TERM_COLORS);
 	if(value != NULL) {
 		errno = 0;
 		term_colors = strtol(value, &value, 0);
 		if(errno == EINVAL)
-			LOG(TERM_PUT_WARNING_TERM_COLORS_CONVERSION_FAILURE);
+			term_put_warning_term_colors_conversion_failure(TERM_COLORS);
 		else if(errno == ERANGE && term_colors == LONG_MAX)
-			LOG(TERM_PUT_WARNING_TERM_COLORS_OVERFLOW);
+			term_put_warning_term_colors_overflow(TERM_COLORS);
 		else if(errno == ERANGE && term_colors == LONG_MIN)
-			LOG(TERM_PUT_WARNING_TERM_COLORS_UNDERFLOW);
+			term_put_warning_term_colors_underflow(TERM_COLORS);
 		else if(value[0] != '\0')
-			LOG(TERM_PUT_WARNING_TERM_COLORS_CONVERSION_FAILURE);
+			term_put_warning_term_colors_conversion_failure(TERM_COLORS);
 		else
 			term_colors_set = TRUE;
 	}
@@ -57,12 +58,12 @@ int term_put_term_colors() {
 		int length = fprintf(stdout, "%ld\n", term_colors);
 		return length < 0 ? 0 : length;
 	} else {
-		int term_colors = tigetnum("colors");
+		long term_colors = tigetnum("colors");
 		if(term_colors < 0) {
 			if(term_colors == -2)
-				LOG(TERM_PUT_WARNING_TERM_COLORS_UNAVAILABLE);
+				term_put_warning_term_colors_unavailable();
 			else if(term_colors == -1)
-				LOG(TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED);
+				term_put_warning_term_colors_unsupported();
 			return term_colors;
 		} else {
 			int length = fprintf(stdout, "%ld\n", term_colors);
