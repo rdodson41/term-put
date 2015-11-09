@@ -24,19 +24,25 @@
 #  along with term-put. If not, see <http://www.gnu.org/licenses/>.
 #
 
+#  Disable the automatic removal of intermediate files
+.SECONDARY:
+
 #  Enable secondary expansion
 .SECONDEXPANSION:
 
 #  Set shell to bash
 SHELL = bash -o pipefail
 
-#  Set stem
-stem = %
-
-#  Set relative file paths
+#  Set relative directories
 bin = bin
 obj = obj
 src = src
+
+#  Set stem
+stem = %
+
+#  Set libraries
+libraries = -lncurses
 
 #  Print makefile usage
 .PHONY: help usage
@@ -57,20 +63,20 @@ push:
 .PHONY: build
 build: $(bin)/term-put
 
-$(bin):
-	@mkdir -p $@ 2>&1 | sed -e "s/^/make: /" >&2
+$(bin) $(obj):
+	@echo "make: mkdir: $@" >&2
+	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
 $(bin)/%: $$(patsubst $(src)/$$(stem).c,$(obj)/$$(stem).o,$$(shell find $(src) -path $(src)/$$*.c -or -path $(src)/$$*-*.c)) | $(bin)
-	@cc -o $@ -lncurses $? 2>&1 | sed -e "s/^/make: cc: /" >&2
-
-$(obj):
-	@mkdir -p $@ 2>&1 | sed -e "s/^/make: /" >&2
+	@echo "make: $(CC): $^ -> $@" >&2
+	@$(CC) -o "$@" $(libraries) $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 $(obj)/%.o: $(src)/%.c | $(obj)
-	@cc -o $@ -c -I$(src) $? 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@echo "make: $(CC): $? -> $@" >&2
+	@$(CC) -o "$@" -c "-I$(src)" $? 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 #  Clean targets
 .PHONY: clean
 clean:
-	@rm -f -r $(bin) 2>&1 | sed -e "s/^/make: /" >&2
-	@rm -f -r $(obj) 2>&1 | sed -e "s/^/make: /" >&2
+	@echo "make: rm: $(bin) $(obj)" >&2
+	@rm -f -r "$(bin)" "$(obj)" 2>&1 | sed -e "s/^/make: /" >&2
