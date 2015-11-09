@@ -35,10 +35,8 @@
 #define FALSE 0
 #endif
 
-//  Define FWRITE to write a constant string to a file if it is not already defined
-#ifndef FWRITE
+//  Define FWRITE to write a constant string to a file
 #define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
-#endif
 
 void term_put_usage();
 void term_put_version();
