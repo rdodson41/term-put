@@ -27,3 +27,9 @@
 
 #  Ignore swap files
 *.swp
+
+#  Ignore bin
+bin/
+
+#  Ignore obj
+obj/
