@@ -1,3 +1,5 @@
+#!/usr/bin/make -f
+
 #  
 #  Name:     rdodson41/term-put/makefile
 #  Author:   Richard E. Dodson <richard.elias.dodson@gmail.com>
@@ -22,8 +24,14 @@
 #  along with term-put. If not, see <http://www.gnu.org/licenses/>.
 #
 
+#  Enable secondary expansion
+.SECONDEXPANSION:
+
 #  Set shell to bash
 SHELL = bash -o pipefail
+
+#  Set stem
+stem = %
 
 #  Set relative file paths
 bin = bin
@@ -52,13 +60,8 @@ build: $(bin)/term-put
 $(bin):
 	@mkdir -p $@ 2>&1 | sed -e "s/^/make: /" >&2
 
-$(bin)/%: $(patsubst $(bin)/%,$(src)/%,$@).c
-#$(patsubst $(src)/%.c,$(obj)/%.o,$(shell find $(src) -path $(patsubst $(bin)/%,$(src)/%,$@).c)) | $(bin)
-	@echo "$(patsubst $(bin)/%,$(src)/%,$@).c"
-	@echo "$(shell find $(src) -path $(src)/$*.c)"
-	@echo "$^"
-	@echo "$?"
-	@cc -o $@ $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
+$(bin)/%: $$(patsubst $(src)/$$(stem).c,$(obj)/$$(stem).o,$$(shell find $(src) -path $(src)/$$*.c -or -path $(src)/$$*-*.c)) | $(bin)
+	@cc -o $@ -lncurses $? 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 $(obj):
 	@mkdir -p $@ 2>&1 | sed -e "s/^/make: /" >&2
@@ -69,5 +72,5 @@ $(obj)/%.o: $(src)/%.c | $(obj)
 #  Clean targets
 .PHONY: clean
 clean:
-	rm -f -r $(bin)
-	rm -f -r $(obj)
+	@rm -f -r $(bin) 2>&1 | sed -e "s/^/make: /" >&2
+	@rm -f -r $(obj) 2>&1 | sed -e "s/^/make: /" >&2
