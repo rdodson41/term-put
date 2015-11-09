@@ -40,9 +40,6 @@ src = src
 usr = usr
 usr_local = $(usr)/local
 
-#  Set targets
-targets = $(build)/$(bin)/term-put
-
 #  Print makefile usage
 .PHONY: help usage
 help usage:
@@ -58,13 +55,13 @@ pull:
 push:
 	@git push --verbose 2>&1 | sed -e "s/^/make: git: /" >&2
 
-$(build)/$(bin) $(build)/$(obj) $(root)/$(usr_local)/$(bin):
-	@echo "make: mkdir: $@" >&2
-	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
-
 #  Build targets
 .PHONY: build
-build: $(targets)
+build: $(build)/$(bin)/term-put
+
+$(build)/$(bin) $(build)/$(obj):
+	@echo "make: mkdir: $@" >&2
+	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
 $(build)/$(bin)/term-put: $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c)) | $(build)/$(bin)
 	@echo "make: $(CC): $^ -> $@" >&2
@@ -79,7 +76,3 @@ $(build)/$(obj)/%.o: $(src)/%.c | $(build)/$(obj)
 clean:
 	@echo "make: rm: $(build)" >&2
 	@rm -f -r "$(build)" 2>&1 | sed -e "s/^/make: /" >&2
-
-#  Install targets
-.PHONY: install
-install: $(targets) | $(root)/$(usr_local)/$(bin)
