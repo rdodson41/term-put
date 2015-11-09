@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <term-put.h>
 
 #define ARGUMENT (*(argv))
@@ -88,17 +89,17 @@ void term_put_error_attribute_malformed(const char* attribute) {
 }
 
 //  Print term-put warning: Failed to convert number of terminal colors to a long integer to standard error
-void term_put_warning_term_colors_conversion_failure(char* term_colors) {
+void term_put_warning_term_colors_conversion_failure(const char* term_colors) {
 	fprintf(stderr, "term-put: warning: Failed to convert %s to a long integer\n", term_colors);
 }
 
 // Print term-put warning: Number of terminal colors is out of range to standard error
-void term_put_warning_term_colors_overflow(char* term_colors) {
+void term_put_warning_term_colors_overflow(const char* term_colors) {
 	fprintf(stderr, "term-put: warning: %s is out of range\n", term_colors);
 } 
 
 // Print term-put warning: Number of terminal colors is out of range to standard error
-void term_put_warning_term_colors_underflow(char* term_colors) {
+void term_put_warning_term_colors_underflow(const char* term_colors) {
 	fprintf(stderr, "term-put: warning: %s is out of range\n", term_colors);
 } 
 
@@ -109,7 +110,7 @@ void term_put_warning_term_colors_unavailable() {
 }
 
 //  Print term-put warning: Terminal colors are unsupported to standard error
-void term_put_warning_Term_colors_unsupported() {
+void term_put_warning_term_colors_unsupported() {
 	static const char TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED[] = "term-put: warning: Terminal colors are unsupported\n";
 	FWRITE(stderr, TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED);
 }
