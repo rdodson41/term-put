@@ -1,9 +1,7 @@
-#!/usr/bin/make -f
-
 #  
 #  Name:     rdodson41/term-put/makefile
 #  Author:   Richard E. Dodson <richard.elias.dodson@gmail.com>
-#  Created:  Sun Nov  8 20:52:57 UTC 2015
+#  Created:  Sun Nov 08 20:52:57 UTC 2015
 #  License:  GNU General Public License, Version 3, 29 June 2007
 #  
 #  Copyright (C) 2015 Richard E. Dodson <richard.elias.dodson@gmail.com>
@@ -27,21 +25,15 @@
 #  Set shell to bash
 SHELL = bash -o pipefail
 
-#  Set absolute file paths
-root = 
-root_home = $(HOME)
-root_pwd = $(PWD)
-
 #  Set relative file paths
-home = /home
-opt = /opt
-usr = /usr
-usr_local = $(usr)/local
+bin = bin
+obj = obj
+src = src
 
-#  Log usage
+#  Print makefile usage
 .PHONY: help usage
 help usage:
-	@echo "make: usage: make [ help | pull | push | install | uninstall | reinstall | update ]" >&2
+	@echo "make: usage: make [ help | pull | push | build | clean ]" >&2
 
 #  Pull repository
 .PHONY: pull
@@ -53,27 +45,29 @@ pull:
 push:
 	@git push --verbose 2>&1 | sed -e "s/^/make: git: /" >&2
 
-#  Install repository
-.PHONY: install
-install: $(patsubst $(root_pwd)$(home)/%,$(root_home)/%,$(shell find $(root_pwd)$(home) ! -type d))
+#  Build targets
+.PHONY: build
+build: $(bin)/term-put
 
-$(root_home)/%: $(root_pwd)$(home)/%
-	@echo "make: ln: $@ -> $<" >&2
-	@mkdir -p "$(@D)" 2>&1 | sed -e "s/^/make: /" >&2
-	@ln -s "$<" "$@" 2>&1 | sed -e "s/^/make: /" >&2
+$(bin):
+	@mkdir -p $@ 2>&1 | sed -e "s/^/make: /" >&2
 
-#  Uninstall repository
-.PHONY: uninstall
-uninstall: $(patsubst $(root_pwd)$(home)/%,uninstall-$(root_home)/%,$(shell find $(root_pwd)$(home) ! -type d)) 
+$(bin)/%: $(patsubst $(bin)/%,$(src)/%,$@).c
+#$(patsubst $(src)/%.c,$(obj)/%.o,$(shell find $(src) -path $(patsubst $(bin)/%,$(src)/%,$@).c)) | $(bin)
+	@echo "$(patsubst $(bin)/%,$(src)/%,$@).c"
+	@echo "$(shell find $(src) -path $(src)/$*.c)"
+	@echo "$^"
+	@echo "$?"
+	@cc -o $@ $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
 
-uninstall-$(root_home)/%:
-	@echo "make: rm: $(root_home)/$*" >&2
-	@rm -f "$(root_home)/$*" 2>&1 | sed -e "s/^/make: /" >&2
+$(obj):
+	@mkdir -p $@ 2>&1 | sed -e "s/^/make: /" >&2
 
-#  Reinstall repository
-.PHONY: reinstall
-reinstall: uninstall install
+$(obj)/%.o: $(src)/%.c | $(obj)
+	@cc -o $@ -c -I$(src) $? 2>&1 | sed -e "s/^/make: cc: /" >&2
 
-#  Update repository
-.PHONY: update
-update: uninstall pull install
+#  Clean targets
+.PHONY: clean
+clean:
+	rm -f -r $(bin)
+	rm -f -r $(obj)
