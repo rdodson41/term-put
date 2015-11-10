@@ -30,6 +30,11 @@
 //  Define FWRITE to write a constant string to a file
 #define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
 
+//  Define macros to process command line arguments
+#define ARGUMENT (*(argv))
+#define OPTION_LONG ((ARGUMENT) + 2)
+#define OPTION_SHORT (*(ARGUMENT))
+
 //  Print term-put usage to standard error and exit
 void term_put_usage() {
 	static const char TERM_PUT_USAGE[] =
@@ -131,11 +136,6 @@ void term_put_underline() {
 	static const char TERM_PUT_UNDERLINE[] = "\x1b[4m";
 	FWRITE(stdout, TERM_PUT_UNDERLINE);
 }	
-
-//  Define macros to process command line arguments
-#define ARGUMENT (*(argv))
-#define OPTION_LONG ((ARGUMENT) + 2)
-#define OPTION_SHORT (*(ARGUMENT))
 
 //  Process command line arguments
 int main(int argc, char* argv[]) {
