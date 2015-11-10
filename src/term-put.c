@@ -27,6 +27,9 @@
 #include <string.h>
 #include <term-put.h>
 
+//  Define FWRITE to write a constant string to a file
+#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
+
 //  Print term-put usage to standard error and exit
 void term_put_usage() {
 	static const char TERM_PUT_USAGE[] =
