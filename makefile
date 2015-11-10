@@ -40,6 +40,13 @@ src = src
 usr = usr
 usr_local = $(usr)/local
 
+build_targets = $(build)/$(bin)/term-put
+build_bin_term_put_files = 
+
+install = $(build)/$(bin)
+install_files = $(shell find $(install) ! -type d)
+install_targets = $(patsubst $(build)/%,$(root)/$(usr_local)/%,$(install_files))
+
 #  Print makefile usage
 .PHONY: help usage
 help usage:
@@ -55,13 +62,13 @@ pull:
 push:
 	@git push --verbose 2>&1 | sed -e "s/^/make: git: /" >&2
 
+$(build)/$(bin) $(build)/$(obj) $(root)/$(usr_local)/$(bin):
+	@echo "make: mkdir: $@" >&2
+	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
+
 #  Build targets
 .PHONY: build
 build: $(build)/$(bin)/term-put
-
-$(build)/$(bin) $(build)/$(obj):
-	@echo "make: mkdir: $@" >&2
-	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
 $(build)/$(bin)/term-put: $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c)) | $(build)/$(bin)
 	@echo "make: $(CC): $^ -> $@" >&2
@@ -76,3 +83,18 @@ $(build)/$(obj)/%.o: $(src)/%.c | $(build)/$(obj)
 clean:
 	@echo "make: rm: $(build)" >&2
 	@rm -f -r "$(build)" 2>&1 | sed -e "s/^/make: /" >&2
+
+#  Install targets
+.PHONY: install
+install: $(install_targets)
+
+$(root)/$(usr_local)/%: $(build)/%
+	@echo "make: ln: $? -> $@" >&2
+	@mkdir -p "$(@D)" 2>&1 | sed -e "s/^/make: /" >&2
+	@ln -f -r -s $? "$@" 2>&1 | sed -e "s/^/make: /" >&2
+
+#  Uninstall targets
+.PHONY: uninstall
+uninstall: 
+	@echo "make: rm: $(install_targets)" >&2
+	@rm -f $(install_targets) 2>&1 | sed -e "s/^/make: /" >&2
