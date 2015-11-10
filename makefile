@@ -32,8 +32,8 @@ root =
 
 #  Set relative directories
 bin = bin
-lib = lib
 include = include
+lib = lib
 obj = obj
 src = src
 usr = usr
