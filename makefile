@@ -32,7 +32,6 @@ root =
 
 #  Set relative directories
 bin = bin
-build = build
 lib = lib
 include = include
 obj = obj
@@ -40,17 +39,19 @@ src = src
 usr = usr
 usr_local = $(usr)/local
 
-build_targets = $(build)/$(bin)/term-put
-build_bin_term_put_files = 
+#  Set build targets
+build = build
+build_bin_term_put_all = $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c)) 
+build_all = $(build)/$(bin)/term-put
 
-install = $(build)/$(bin)
-install_files = $(shell find $(install) ! -type d)
-install_targets = $(patsubst $(build)/%,$(root)/$(usr_local)/%,$(install_files))
+#  Set install targets
+install = $(root)/$(usr_local)
+install_all = $(patsubst $(build)/%,$(install)/%,$(build_all))
 
 #  Print makefile usage
 .PHONY: help usage
 help usage:
-	@echo "make: usage: make [ help | pull | push | build | clean ]" >&2
+	@echo "make: usage: make [ help | pull | push | build | clean | install | uninstall ]" >&2
 
 #  Pull repository
 .PHONY: pull
@@ -62,21 +63,25 @@ pull:
 push:
 	@git push --verbose 2>&1 | sed -e "s/^/make: git: /" >&2
 
-$(build)/$(bin) $(build)/$(obj) $(root)/$(usr_local)/$(bin):
+#  Build targets
+.PHONY: build
+build: $(build_all)
+
+$(build)/$(bin):
 	@echo "make: mkdir: $@" >&2
 	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
-#  Build targets
-.PHONY: build
-build: $(build)/$(bin)/term-put
-
-$(build)/$(bin)/term-put: $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c)) | $(build)/$(bin)
+$(build)/$(bin)/term-put: $(build_bin_term_put_all) | $(build)/$(bin)
 	@echo "make: $(CC): $^ -> $@" >&2
 	@$(CC) -o "$@" "-L$(lib)" -lncurses $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
 
+$(build)/$(obj):
+	@echo "make: mkdir: $@" >&2
+	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
+
 $(build)/$(obj)/%.o: $(src)/%.c | $(build)/$(obj)
 	@echo "make: $(CC): $? -> $@" >&2
-	@$(CC) -o "$@" "-I$(include)" "-I$(src)" -c $? 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@$(CC) -o "$@" "-I$(include)" "-I$(src)" -c "$?" 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 #  Clean targets
 .PHONY: clean
@@ -86,15 +91,18 @@ clean:
 
 #  Install targets
 .PHONY: install
-install: $(install_targets)
+install: $(install_all)
 
-$(root)/$(usr_local)/%: $(build)/%
+$(install)/$(bin):
+	@echo "make: mkdir: $@" >&2
+	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
+
+$(install)/$(bin)/%: $(build)/$(bin)/% | $(install)/$(bin)
 	@echo "make: ln: $? -> $@" >&2
-	@mkdir -p "$(@D)" 2>&1 | sed -e "s/^/make: /" >&2
-	@ln -f -r -s $? "$@" 2>&1 | sed -e "s/^/make: /" >&2
+	@ln -f -r -s "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
 #  Uninstall targets
 .PHONY: uninstall
-uninstall: 
-	@echo "make: rm: $(install_targets)" >&2
-	@rm -f $(install_targets) 2>&1 | sed -e "s/^/make: /" >&2
+uninstall:
+	@echo "make: rm: $(install_all)" >&2
+	@rm -f $(install_all) 2>&1 | sed -e "s/^/make: /" >&2
