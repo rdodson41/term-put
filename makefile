@@ -32,24 +32,22 @@ root =
 
 #  Set relative directories
 bin = bin
-include = include
-lib = lib
 obj = obj
 src = src
 usr = usr
-usr_local = $(usr)/local
+usr-local = $(usr)/local
 
 #  Set build targets
 build = build
-build_bin_term_put_all = $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c)) 
-build_all = $(build)/$(bin)/term-put
+build-bin-term-put-all = $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c)) 
+build-all = $(build)/$(bin)/term-put
 
 #  Set install targets
-install = $(root)/$(usr_local)
-install_all = $(patsubst $(build)/%,$(install)/%,$(build_all))
+install = $(root)/$(usr-local)
+install-all = $(patsubst $(build)/%,$(install)/%,$(build-all))
 
-#  Set default options
-installation-type = link-symbolic
+#  Set default installation type
+installation-type = copy
 
 #  Print makefile usage
 .PHONY: help usage
@@ -68,15 +66,15 @@ push:
 
 #  Build targets
 .PHONY: build
-build: $(build_all)
+build: $(build-all)
 
 $(build)/$(bin):
 	@echo "make: mkdir: $@" >&2
 	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
-$(build)/$(bin)/term-put: $(build_bin_term_put_all) | $(build)/$(bin)
+$(build)/$(bin)/term-put: $(build-bin-term-put-all) | $(build)/$(bin)
 	@echo "make: $(CC): $^ -> $@" >&2
-	@$(CC) -o "$@" "-L$(lib)" -lncurses $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@$(CC) -o "$@" -lncurses $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 $(build)/$(obj):
 	@echo "make: mkdir: $@" >&2
@@ -84,7 +82,7 @@ $(build)/$(obj):
 
 $(build)/$(obj)/%.o: $(src)/%.c | $(build)/$(obj)
 	@echo "make: $(CC): $? -> $@" >&2
-	@$(CC) -o "$@" "-I$(include)" "-I$(src)" -c "$?" 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@$(CC) -o "$@" "-I$(src)" -c "$?" 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 #  Clean targets
 .PHONY: clean
@@ -94,7 +92,7 @@ clean:
 
 #  Install targets
 .PHONY: install
-install: $(install_all)
+install: $(install-all)
 
 $(install)/$(bin):
 	@echo "make: mkdir: $@" >&2
@@ -109,15 +107,14 @@ else ifeq ($(installation-type),link-hard)
 	@ln -f "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
 else ifeq ($(installation-type),link-symbolic)
 	@echo "make: ln: $? -> $@" >&2
-	@ln -f -r -s "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
+	@ln -f -s -r "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
 else
-	@echo "make: error: Invalid installation type: $(installation-type)" >&2
+	@echo "make: error: Invalid installation type: \"$(installation-type)\"" >&2
 	@exit 1
 endif
-	
 
 #  Uninstall targets
 .PHONY: uninstall
 uninstall:
-	@echo "make: rm: $(install_all)" >&2
-	@rm -f $(install_all) 2>&1 | sed -e "s/^/make: /" >&2
+	@echo "make: rm: $(install-all)" >&2
+	@rm -f $(install-all) 2>&1 | sed -e "s/^/make: /" >&2
