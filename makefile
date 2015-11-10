@@ -48,6 +48,9 @@ build_all = $(build)/$(bin)/term-put
 install = $(root)/$(usr_local)
 install_all = $(patsubst $(build)/%,$(install)/%,$(build_all))
 
+#  Set default options
+installation-type = link-symbolic
+
 #  Print makefile usage
 .PHONY: help usage
 help usage:
@@ -98,8 +101,20 @@ $(install)/$(bin):
 	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
 $(install)/$(bin)/%: $(build)/$(bin)/% | $(install)/$(bin)
+ifeq ($(installation-type),copy)
+	@echo "make: cp: $? -> $@" >&2
+	@cp -f "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
+else ifeq ($(installation-type),link-hard)
+	@echo "make: ln: $? -> $@" >&2
+	@ln -f "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
+else ifeq ($(installation-type),link-symbolic)
 	@echo "make: ln: $? -> $@" >&2
 	@ln -f -r -s "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
+else
+	@echo "make: error: Invalid installation type: $(installation-type)" >&2
+	@exit 1
+endif
+	
 
 #  Uninstall targets
 .PHONY: uninstall
