@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <term.h>
 #include <term-put.h>
 
 //  Define FWRITE to write a constant string to a file
@@ -119,6 +120,11 @@ void term_put_warning_term_colors_unsupported() {
 	FWRITE(stderr, TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED);
 }
 
+//  Set terminal type
+void term_put_term_set(const char* term) {
+	setupterm(term, STDOUT_FILENO, NULL);
+}
+
 //  Disable terminal output attributes
 void term_put_normal() {
 	static const char TERM_PUT_NORMAL[] = "\x1b[0m";
@@ -156,7 +162,7 @@ int main(int argc, char* argv[]) {
 					if(value == NULL)
 						term_put_error_option_long_malformed(OPTION_LONG);
 					else
-						printf("term=\"%s\"\n", value);
+						term_put_term_set(value);
 				else
 					term_put_error_option_long_invalid(OPTION_LONG);
 
