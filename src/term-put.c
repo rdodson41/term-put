@@ -139,26 +139,37 @@ void term_put_underline() {
 
 //  Process command line arguments
 int main(int argc, char* argv[]) {
-	for(argv++; --argc > 0; argv++)
+	for(argv++; --argc > 0; argv++) {
+		char* separator = strchr(ARGUMENT, '=');
+		size_t argument_length = separator == NULL ? strlen(ARGUMENT) : separator - ARGUMENT;
+		size_t option_long_length = separator == NULL ? strlen(OPTION_LONG) : separator - OPTION_LONG;
+		char* value = separator == NULL ? NULL : separator + 1;
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
-				if(strcmp(OPTION_LONG, "help") == 0)
+				if(strncmp(OPTION_LONG, "help", option_long_length) == 0)
 					term_put_usage();
-				else if(strcmp(OPTION_LONG, "usage") == 0)
+				else if(strncmp(OPTION_LONG, "usage", option_long_length) == 0)
 					term_put_usage();
-				else if(strcmp(OPTION_LONG, "version") == 0)
+				else if(strncmp(OPTION_LONG, "version", option_long_length) == 0)
 					term_put_version();
+				else if(strncmp(OPTION_LONG, "term", option_long_length) == 0)
+					if(value == NULL)
+						term_put_error_option_long_malformed(OPTION_LONG);
+					else
+						printf("term=\"%s\"\n", value);
 				else
 					term_put_error_option_long_invalid(OPTION_LONG);
+
 			else
 				for(ARGUMENT++; OPTION_SHORT != '\0'; ARGUMENT++)
 					term_put_error_option_short_invalid(OPTION_SHORT);
-		else if(strcmp(ARGUMENT, "normal") == 0)
+		else if(strncmp(ARGUMENT, "normal", argument_length) == 0)
 			term_put_normal();
-		else if(strcmp(ARGUMENT, "bold") == 0)
+		else if(strncmp(ARGUMENT, "bold", argument_length) == 0)
 			term_put_bold();
-		else if(strcmp(ARGUMENT, "underline") == 0)
+		else if(strncmp(ARGUMENT, "underline", argument_length) == 0)
 			term_put_underline();
 		else
 			term_put_error_attribute_invalid(ARGUMENT);
+	}
 }
