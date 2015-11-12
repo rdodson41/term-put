@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <term.h>
 #include <term-put.h>
 
@@ -56,7 +57,7 @@ void term_put_version() {
 
 //  Set terminal type
 void term_put_term_set(const char* term) {
-	setupterm(term, STDOUT_FILENO, NULL);
+	setupterm((char*)term, STDOUT_FILENO, NULL);
 }
 
 //  Disable terminal output attributes
