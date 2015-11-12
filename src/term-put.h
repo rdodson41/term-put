@@ -35,9 +35,6 @@
 #define FALSE 0
 #endif
 
-//  Define FWRITE to write a constant string to a file
-#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
-
 void term_put_usage();
 void term_put_version();
 
@@ -53,6 +50,9 @@ void term_put_error_option_short_invalid(const char option);
 void term_put_error_option_short_malformed(const char option);
 void term_put_error_attribute_invalid(const char* attribute);
 void term_put_error_attribute_malformed(const char* attribute);
+void term_put_error_term_info_location_failure();
+void term_put_error_term_generic(const char* term);
+void term_put_error_term_hard_copy(const char* term);
 
 void term_put_warning_term_colors_conversion_failure(const char* term_colors);
 void term_put_warning_term_colors_overflow(const char* term_colors);
