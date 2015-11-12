@@ -25,6 +25,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//  Print term-put warning: Failed to find the terminal information database to standard error
+void term_put_warning_term_info_location_failure() {
+	fputs("Failed to find the terminal information database\n", stderr);
+}
+
+//  Print term-put warning: Terminal is a generic terminal to standard error
+void term_put_warning_term_generic(const char* term) {
+	fprintf(stderr, "term-put: error: Terminal is a generic terminal: %s\n", term);
+}
+
+//  Print term-put-error: Terminal is a hard-copy terminal to standard error
+void term_put_warning_term_hard_copy(const char* term) {
+	fprintf(stderr, "term-put: error: Terminal is a hard-copy terminal: %s\n", term);
+}
+
 //  Print term-put warning: Failed to convert number of terminal colors to a long integer to standard error
 void term_put_warning_term_colors_conversion_failure(const char* term_colors) {
 	fprintf(stderr, "term-put: warning: Failed to convert %s to a long integer\n", term_colors);

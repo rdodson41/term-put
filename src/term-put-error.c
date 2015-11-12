@@ -60,21 +60,3 @@ void term_put_error_attribute_malformed(const char* attribute) {
 	fprintf(stderr, "term-put: error: Malformed attribute: %s requires a value\n", attribute);
 	exit(1);
 }
-
-//  Print term-put error: Failed to find the terminal information database to standard error and exit
-void term_put_error_term_info_location_failure() {
-	fputs("Failed to find the terminal information database\n", stderr);
-	exit(1);
-}
-
-//  Print term-put error: Terminal is a generic terminal to standard error and exit
-void term_put_error_term_generic(const char* term) {
-	fprintf(stderr, "term-put: error: Terminal is a generic terminal: %s\n", term);
-	exit(1)
-}
-
-//  Print term-put-error: Terminal is a hard-copy terminal to standard error and exit
-void term_put_error_term_hard_copy(const char* term) {
-	fprintf(stderr, "term-put: error: Terminal is a hard-copy terminal: %s\n", term);
-	exit(1);
-}
