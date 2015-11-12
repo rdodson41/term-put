@@ -26,35 +26,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//  Include term-put header files
-#include <term-put.h>
-
 //  Print term-put error: Invalid option to standard error and exit
-void term_put_error_option_invalid(const char* option) {
+void term_put_error_option_invalid(const char* option)
+{
 	fprintf(stderr, "term-put: error: Invalid option: \"%s\"\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Malformed option to standard error and exit
-void term_put_error_option_malformed(const char* option) {
+void term_put_error_option_malformed(const char* option)
+{
 	fprintf(stderr, "term-put: error: Malformed option: \"%s\" requires an argument\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Invalid option to standard error and exit
-void term_put_error_option_short_invalid(const char option) {
+void term_put_error_option_short_invalid(const char option)
+{
 	fprintf(stderr, "term-put: error: Invalid option: \"-%c\"\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Invalid attribute to standard error and exit
-void term_put_error_attribute_invalid(const char* attribute) {
+void term_put_error_attribute_invalid(const char* attribute)
+{
 	fprintf(stderr, "term-put: error: Invalid attribute: \"%s\"\n", attribute);
 	exit(1);
 }
 
 //  Print term-put error: Malformed attribute to standard error and exit
-void term_put_error_attribute_malformed(const char* attribute) {
+void term_put_error_attribute_malformed(const char* attribute)
+{
 	fprintf(stderr, "term-put: error: Malformed attribute: \"%s\" requires a value\n", attribute);
+	exit(1);
+}
+
+//  Print term-put error: Terminal colors are undefined to standard error and exit
+void term_put_error_term_colors_undefined()
+{
+	fprintf(stderr, "term-put: error: Terminal colors are undefined\n");
 	exit(1);
 }
