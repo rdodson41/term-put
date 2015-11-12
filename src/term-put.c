@@ -57,7 +57,8 @@ void term_put_version() {
 
 //  Set terminal type
 void term_put_term_set(const char* term) {
-	setupterm((char*)term, STDOUT_FILENO, NULL);
+	int error = 0;
+	int result = setupterm((char*)term, STDOUT_FILENO, &error);
 }
 
 //  Disable terminal output attributes
