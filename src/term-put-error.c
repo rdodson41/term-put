@@ -24,53 +24,57 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <term-put.h>
 
 //  Print term-put error: Invalid option to standard error and exit
 void term_put_error_option_long_invalid(const char* option) {
-	static const char TERM_PUT_ERROR_OPTION_LONG_INVALID[] = "term-put: error: Invalid option: --%s\n";
-	fprintf(stderr, TERM_PUT_ERROR_OPTION_LONG_INVALID, option);
+	fprintf(stderr, "term-put: error: Invalid option: --%s\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Malformed option to standard error and exit
 void term_put_error_option_long_malformed(const char* option) {
-	static const char TERM_PUT_ERROR_OPTION_LONG_MALFORMED[] = "term-put: error: Malformed option: --%s requires an argument\n";
-	fprintf(stderr, TERM_PUT_ERROR_OPTION_LONG_MALFORMED, option);
+	fprintf(stderr, "term-put: error: Malformed option: --%s requires an argument\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Invalid option to standard error and exit
 void term_put_error_option_short_invalid(const char option) {
-	static const char TERM_PUT_ERROR_OPTION_SHORT_INVALID[] = "term-put: error: Invalid option: -%c\n";
-	fprintf(stderr, TERM_PUT_ERROR_OPTION_SHORT_INVALID, option);
+	fprintf(stderr, "term-put: error: Invalid option: -%c\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Malformed option to standard error and exit
 void term_put_error_option_short_malformed(const char option) {
-	static const char TERM_PUT_ERROR_OPTION_SHORT_MALFORMED[] = "term-put: error: Malformed option: -%c requires an argument\n";
-	fprintf(stderr, TERM_PUT_ERROR_OPTION_SHORT_MALFORMED, option);
+	fprintf(stderr, "term-put: error: Malformed option: -%c requires an argument\n", option);
 	exit(1);
 }
 
 //  Print term-put error: Invalid attribute to standard error and exit
 void term_put_error_attribute_invalid(const char* attribute) {
-	static const char TERM_PUT_ERROR_ATTRIBUTE_INVALID[] = "term-put: error: Invalid attribute: %s\n";
-	fprintf(stderr, TERM_PUT_ERROR_ATTRIBUTE_INVALID, attribute);
+	fprintf(stderr, "term-put: error: Invalid attribute: %s\n", attribute);
 	exit(1);
 }
 
 //  Print term-put error: Malformed attribute to standard error and exit
 void term_put_error_attribute_malformed(const char* attribute) {
-	static const char TERM_PUT_ERROR_ATTRIBUTE_MALFORMED[] = "term-put: error: Malformed attribute: %s requires a value\n";
-	fprintf(stderr, TERM_PUT_ERROR_ATTRIBUTE_MALFORMED, attribute);
+	fprintf(stderr, "term-put: error: Malformed attribute: %s requires a value\n", attribute);
 	exit(1);
 }
 
-//  Print term-put error: Terminal type is unsupported to standard error and exit
-void term_put_error_term_unsupported(const char* term) {
-	static const char TERM_PUT_ERROR_TERM_UNSUPPORTED[] = "term-put: error: Terminal type is unspported: %s\n";
-	fprintf(stderr, TERM_PUT_ERROR_TERM_UNSUPPORTED, term);
+//  Print term-put error: Failed to find the terminal information database to standard error and exit
+void term_put_error_term_info_location_failure() {
+	fputs("Failed to find the terminal information database\n", stderr);
+	exit(1);
+}
+
+//  Print term-put error: Terminal is a generic terminal to standard error and exit
+void term_put_error_term_generic(const char* term) {
+	fprintf(stderr, "term-put: error: Terminal is a generic terminal: %s\n", term);
+	exit(1)
+}
+
+//  Print term-put-error: Terminal is a hard-copy terminal to standard error and exit
+void term_put_error_term_hard_copy(const char* term) {
+	fprintf(stderr, "term-put: error: Terminal is a hard-copy terminal: %s\n", term);
 	exit(1);
 }
