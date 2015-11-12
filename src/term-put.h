@@ -25,39 +25,29 @@
 #ifndef TERM_PUT
 #define TERM_PUT
 
-//  Define TRUE if it is not already defined
-#ifndef TRUE
-#define TRUE 1
-#endif
+//  Include C standard header files
+#include <stdbool.h>
 
-//  Define FALSE if it is not already defined
-#ifndef FALSE
-#define FALSE 0
-#endif
+//  Define FWRITE to write a constant string to a file
+#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
 
-void term_put_usage();
-void term_put_version();
+void term_put_term_set(char* term);
+void term_put_term_colors_set(char* term_colors);
 
-void term_put_term_set(const char* term);
-
-void term_put_normal();
-void term_put_bold();
-void term_put_underline();
-
-void term_put_error_option_long_invalid(const char* option);
-void term_put_error_option_long_malformed(const char* option);
+void term_put_error_option_invalid(const char* option);
+void term_put_error_option_malformed(const char* option);
 void term_put_error_option_short_invalid(const char option);
-void term_put_error_option_short_malformed(const char option);
 void term_put_error_attribute_invalid(const char* attribute);
 void term_put_error_attribute_malformed(const char* attribute);
-void term_put_error_term_info_location_failure();
-void term_put_error_term_generic(const char* term);
-void term_put_error_term_hard_copy(const char* term);
 
-void term_put_warning_term_colors_conversion_failure(const char* term_colors);
-void term_put_warning_term_colors_overflow(const char* term_colors);
-void term_put_warning_term_colors_underflow(const char* term_colors);
-void term_put_warning_term_colors_unavailable();
-void term_put_warning_term_colors_unsupported();
+void term_put_warning_term_unavailable(const bool term_env, const char* term);
+void term_put_warning_term_unsupported(const bool term_env, const char* term);
+void term_put_warning_term_generic(const bool term_env, const char* term);
+void term_put_warning_term_hard_copy(const bool term_env, const char* term);
+void term_put_warning_term_colors_unavailable(const bool term_env, const char* term);
+void term_put_warning_term_colors_unsupported(const bool term_env, const char* term);
+void term_put_warning_term_colors_conversion_failure(const bool term_colors_env, const char* term_colors);
+void term_put_warning_term_colors_overflow(const bool term_colors_env, const char* term_colors);
+void term_put_warning_term_colors_underflow(const bool term_colors_env, const char* term_colors);
 
 #endif
