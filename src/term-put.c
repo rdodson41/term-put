@@ -22,21 +22,21 @@
 //  along with term-put. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <stdlib.h>
+//  Include C standard header files
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <term.h>
+
+//  Include term-put header files
 #include <term-put.h>
 
 //  Define macros to process command line arguments
 #define ARGUMENT (*(argv))
-#define OPTION_LONG ((ARGUMENT) + 2)
-#define OPTION_SHORT (*(ARGUMENT))
+#define OPTION ((ARGUMENT) + 2)
 
 //  Print term-put usage to standard error and exit
 void term_put_usage() {
-	fputs(
+	static const char TERM_PUT_USAGE[] = (
 		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
 		"\n"
 		"        --help               print term-put help\n"
@@ -44,72 +44,87 @@ void term_put_usage() {
 		"        --term=<term>        set terminal type to <term>\n"
 		"        --colors=<colors>    set number of terminal colors to <colors>\n"
 		"\n"
-		, stderr);
+	);
+	fputs(TERM_PUT_USAGE, stderr);
 	exit(1);
 }
 
 //  Print term-put version to standard error and exit
 void term_put_version() {
-	fputs("term-put: version: 0.0.0\n", stderr);
+	static const char TERM_PUT_VERSION[] = "term-put: version: 0.0.0\n";
+	fputs(TERM_PUT_VERSION, stderr);
 	exit(1);
-}
-
-//  Set terminal type
-void term_put_term_set(const char* term) {
-	int error = 0;
-	int result = setupterm((char*)term, STDOUT_FILENO, &error);
 }
 
 //  Disable terminal output attributes
 void term_put_normal() {
 	static const char TERM_PUT_NORMAL[] = "\x1b[0m";
-	fwrite(TERM_PUT_NORMAL, sizeof(char), sizeof(TERM_PUT_NORMAL) - sizeof(char), stdout);
+	FWRITE(stdout, TERM_PUT_NORMAL);
 }
 
 //  Enable bold terminal output
 void term_put_bold() {
 	static const char TERM_PUT_BOLD[] = "\x1b[1m";
-	fwrite(TERM_PUT_BOLD, sizeof(char), sizeof(TERM_PUT_BOLD) - sizeof(char), stdout);
+	FWRITE(stdout, TERM_PUT_BOLD);
 }
 
 //  Enable underlined terminal output
 void term_put_underline() {
 	static const char TERM_PUT_UNDERLINE[] = "\x1b[4m";
-	fwrite(TERM_PUT_UNDERLINE, sizeof(char), sizeof(TERM_PUT_UNDERLINE) - sizeof(char), stdout);
+	FWRITE(stdout, TERM_PUT_UNDERLINE);
 }
 
 //  Process command line arguments
 int main(int argc, char* argv[]) {
+	term_put_term_set(NULL);
+	term_put_term_colors_set(NULL);
+
 	for(argv++; --argc > 0; argv++) {
-		const char* separator = strchr(ARGUMENT, '=');
-		const char* value = separator == NULL ? NULL : separator + 1;
+		char* separator = strchr(ARGUMENT, '=');
+		char* value = separator == NULL ? NULL : separator + 1;
 		const size_t argument_length = separator == NULL ? strlen(ARGUMENT) : separator - ARGUMENT;
-		const size_t option_long_length = separator == NULL ? strlen(OPTION_LONG) : separator - OPTION_LONG;
-		if(ARGUMENT[0] == '-')
-			if(ARGUMENT[1] == '-')
-				if(strncmp(OPTION_LONG, "help", option_long_length) == 0)
+
+		if(ARGUMENT[0] == '-') {
+			if(ARGUMENT[1] == '-') {
+				const size_t option_length = separator == NULL ? strlen(OPTION) : separator - OPTION;
+				if(option_length == 0) {
+					term_put_error_option_invalid(ARGUMENT);
+				} else if(strncmp(OPTION, "help", option_length) == 0) {
 					term_put_usage();
-				else if(strncmp(OPTION_LONG, "usage", option_long_length) == 0)
+				} else if(strncmp(OPTION, "usage", option_length) == 0) {
 					term_put_usage();
-				else if(strncmp(OPTION_LONG, "version", option_long_length) == 0)
+				} else if(strncmp(OPTION, "version", option_length) == 0) {
 					term_put_version();
-				else if(strncmp(OPTION_LONG, "term", option_long_length) == 0)
-					if(value == NULL)
-						term_put_error_option_long_malformed(OPTION_LONG);
-					else
+				} else if(strncmp(OPTION, "term", option_length) == 0) {
+					if(value == NULL) {
+						term_put_error_option_malformed(ARGUMENT);
+					} else {
 						term_put_term_set(value);
-				else
-					term_put_error_option_long_invalid(OPTION_LONG);
-			else
-				for(ARGUMENT++; OPTION_SHORT != '\0'; ARGUMENT++)
-					term_put_error_option_short_invalid(OPTION_SHORT);
-		else if(strncmp(ARGUMENT, "normal", argument_length) == 0)
+					}
+				} else if(strncmp(OPTION, "colors", option_length) == 0) {
+					if(value == NULL) {
+						term_put_error_option_malformed(ARGUMENT);
+					} else {
+						term_put_term_colors_set(value);
+					}
+				} else {
+					term_put_error_option_invalid(ARGUMENT);
+				}
+			} else if(ARGUMENT[1] == '\0') {
+				term_put_error_option_invalid(ARGUMENT);
+			} else {
+				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++) {
+					term_put_error_option_short_invalid(*ARGUMENT);
+				}
+			}
+		} else if(strncmp(ARGUMENT, "normal", argument_length) == 0) {
 			term_put_normal();
-		else if(strncmp(ARGUMENT, "bold", argument_length) == 0)
+		} else if(strncmp(ARGUMENT, "bold", argument_length) == 0) {
 			term_put_bold();
-		else if(strncmp(ARGUMENT, "underline", argument_length) == 0)
+		} else if(strncmp(ARGUMENT, "underline", argument_length) == 0) {
 			term_put_underline();
-		else
+		} else {
 			term_put_error_attribute_invalid(ARGUMENT);
+		}
 	}
 }
