@@ -36,22 +36,21 @@
 
 //  Print term-put usage to standard error and exit
 void term_put_usage() {
-	static const char TERM_PUT_USAGE[] =
+	fputs(
 		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
 		"\n"
 		"        --help               print term-put help\n"
 		"        --version            print term-put version\n"
 		"        --term=<term>        set terminal type to <term>\n"
 		"        --colors=<colors>    set number of terminal colors to <colors>\n"
-		"\n";
-	FWRITE(stderr, TERM_PUT_USAGE);
+		"\n"
+		, stderr);
 	exit(1);
 }
 
 //  Print term-put version to standard error and exit
 void term_put_version() {
-	static const char TERM_PUT_VERSION[] = "term-put: version: 0.0.0\n";
-	FWRITE(stderr, TERM_PUT_VERSION);
+	fputs("term-put: version: 0.0.0\n", stderr);
 	exit(1);
 }
 
@@ -64,19 +63,19 @@ void term_put_term_set(const char* term) {
 //  Disable terminal output attributes
 void term_put_normal() {
 	static const char TERM_PUT_NORMAL[] = "\x1b[0m";
-	FWRITE(stdout, TERM_PUT_NORMAL);
+	fwrite(TERM_PUT_NORMAL, sizeof(char), sizeof(TERM_PUT_NORMAL) - sizeof(char), stdout);
 }
 
 //  Enable bold terminal output
 void term_put_bold() {
 	static const char TERM_PUT_BOLD[] = "\x1b[1m";
-	FWRITE(stdout, TERM_PUT_BOLD);
+	fwrite(TERM_PUT_BOLD, sizeof(char), sizeof(TERM_PUT_BOLD) - sizeof(char), stdout);
 }
 
 //  Enable underlined terminal output
 void term_put_underline() {
 	static const char TERM_PUT_UNDERLINE[] = "\x1b[4m";
-	FWRITE(stdout, TERM_PUT_UNDERLINE);
+	fwrite(TERM_PUT_UNDERLINE, sizeof(char), sizeof(TERM_PUT_UNDERLINE) - sizeof(char), stdout);
 }
 
 //  Process command line arguments
