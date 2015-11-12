@@ -24,34 +24,28 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <term-put.h>
 
 //  Print term-put warning: Failed to convert number of terminal colors to a long integer to standard error
 void term_put_warning_term_colors_conversion_failure(const char* term_colors) {
-	static const char TERM_PUT_WARNING_TERM_COLORS_CONVERSION_FAILURE[] = "term-put: warning: Failed to convert %s to a long integer\n";
-	fprintf(stderr, TERM_PUT_WARNING_TERM_COLORS_CONVERSION_FAILURE, term_colors);
+	fprintf(stderr, "term-put: warning: Failed to convert %s to a long integer\n", term_colors);
 }
 
 // Print term-put warning: Number of terminal colors is out of range to standard error
 void term_put_warning_term_colors_overflow(const char* term_colors) {
-	static const char TERM_PUT_WARNING_TERM_COLORS_OVERFLOW[] = "term-put: warning: %s is out of range\n";
-	fprintf(stderr, TERM_PUT_WARNING_TERM_COLORS_OVERFLOW, term_colors);
+	fprintf(stderr, "term-put: warning: %s is out of range\n", term_colors);
 }
 
 // Print term-put warning: Number of terminal colors is out of range to standard error
 void term_put_warning_term_colors_underflow(const char* term_colors) {
-	static const char TERM_PUT_WARNING_TERM_COLORS_UNDERFLOW[] = "term-put: warning: %s is out of range\n";
-	fprintf(stderr, TERM_PUT_WARNING_TERM_COLORS_UNDERFLOW, term_colors);
+	fprintf(stderr, "term-put: warning: %s is out of range\n", term_colors);
 }
 
 //  Print term-put warning: Terminal colors are unavailable to standard error
 void term_put_warning_term_colors_unavailable() {
-	static const char TERM_PUT_WARNING_TERM_COLORS_UNAVAILABLE[] = "term-put: warning: Terminal colors are unavailable\n";
-	FWRITE(stderr, TERM_PUT_WARNING_TERM_COLORS_UNAVAILABLE);
+	fputs("term-put: warning: Terminal colors are unavailable\n", stderr);
 }
 
 //  Print term-put warning: Terminal colors are unsupported to standard error
 void term_put_warning_term_colors_unsupported() {
-	static const char TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED[] = "term-put: warning: Terminal colors are unsupported\n";
-	FWRITE(stderr, TERM_PUT_WARNING_TERM_COLORS_UNSUPPORTED);
+	fputs("term-put: warning: Terminal colors are unsupported\n", stderr);
 }
