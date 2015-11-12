@@ -67,3 +67,10 @@ void term_put_error_attribute_malformed(const char* attribute) {
 	fprintf(stderr, TERM_PUT_ERROR_ATTRIBUTE_MALFORMED, attribute);
 	exit(1);
 }
+
+//  Print term-put error: Terminal type is unsupported to standard error and exit
+void term_put_error_term_unsupported(const char* term) {
+	static const char TERM_PUT_ERROR_TERM_UNSUPPORTED[] = "term-put: error: Terminal type is unspported: %s\n";
+	fprintf(stderr, TERM_PUT_ERROR_TERM_UNSUPPORTED, term);
+	exit(1);
+}
