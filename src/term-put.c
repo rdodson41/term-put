@@ -33,19 +33,12 @@
 //  Define macros to process command line arguments
 #define ARGUMENT (*(argv))
 #define OPTION ((ARGUMENT) + 2)
-<<<<<<< HEAD
 #define OPTION_LENGTH ((argument_length) - 2)
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
 {
 	static const char TERM_PUT_USAGE[] =
-=======
-
-//  Print term-put usage to standard error and exit
-void term_put_usage() {
-	static const char TERM_PUT_USAGE[] = (
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
 		"\n"
 		"        --help               print term-put help\n"
@@ -53,27 +46,16 @@ void term_put_usage() {
 		"        --term=<term>        set terminal type to <term>\n"
 		"        --colors=<colors>    set number of terminal colors to <colors>\n"
 		"\n"
-<<<<<<< HEAD
 	;
 	FWRITE(stderr, TERM_PUT_USAGE);
-=======
-	);
-	fputs(TERM_PUT_USAGE, stderr);
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	exit(1);
 }
 
 //  Print term-put version to standard error and exit
-<<<<<<< HEAD
 void term_put_version()
 {
 	static const char TERM_PUT_VERSION[] = "term-put: version: 0.0.0\n";
 	FWRITE(stderr, TERM_PUT_VERSION);
-=======
-void term_put_version() {
-	static const char TERM_PUT_VERSION[] = "term-put: version: 0.0.0\n";
-	fputs(TERM_PUT_VERSION, stderr);
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	exit(1);
 }
 
@@ -99,7 +81,6 @@ void term_put_underline()
 }
 
 //  Process command line arguments
-<<<<<<< HEAD
 int main(int argc, char* argv[])
 {
 	term_put_term_set(NULL);
@@ -107,18 +88,10 @@ int main(int argc, char* argv[])
 
 	for(argv++; --argc > 0; argv++)
 	{
-=======
-int main(int argc, char* argv[]) {
-	term_put_term_set(NULL);
-	term_put_term_colors_set(NULL);
-
-	for(argv++; --argc > 0; argv++) {
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 		char* separator = strchr(ARGUMENT, '=');
 		char* value = separator == NULL ? NULL : separator + 1;
 		const size_t argument_length = separator == NULL ? strlen(ARGUMENT) : separator - ARGUMENT;
 
-<<<<<<< HEAD
 		if(argument_length == 0)
 			term_put_error_attribute_invalid(ARGUMENT);
 		else if(ARGUMENT[0] == '-')
@@ -149,55 +122,14 @@ int main(int argc, char* argv[]) {
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					term_put_error_option_short_invalid(*ARGUMENT);
 		else if(strncmp(ARGUMENT, "normal", argument_length) == 0)
-=======
-		if(ARGUMENT[0] == '-') {
-			if(ARGUMENT[1] == '-') {
-				const size_t option_length = separator == NULL ? strlen(OPTION) : separator - OPTION;
-				if(option_length == 0) {
-					term_put_error_option_invalid(ARGUMENT);
-				} else if(strncmp(OPTION, "help", option_length) == 0) {
-					term_put_usage();
-				} else if(strncmp(OPTION, "usage", option_length) == 0) {
-					term_put_usage();
-				} else if(strncmp(OPTION, "version", option_length) == 0) {
-					term_put_version();
-				} else if(strncmp(OPTION, "term", option_length) == 0) {
-					if(value == NULL) {
-						term_put_error_option_malformed(ARGUMENT);
-					} else {
-						term_put_term_set(value);
-					}
-				} else if(strncmp(OPTION, "colors", option_length) == 0) {
-					if(value == NULL) {
-						term_put_error_option_malformed(ARGUMENT);
-					} else {
-						term_put_term_colors_set(value);
-					}
-				} else {
-					term_put_error_option_invalid(ARGUMENT);
-				}
-			} else if(ARGUMENT[1] == '\0') {
-				term_put_error_option_invalid(ARGUMENT);
-			} else {
-				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++) {
-					term_put_error_option_short_invalid(*ARGUMENT);
-				}
-			}
-		} else if(strncmp(ARGUMENT, "normal", argument_length) == 0) {
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 			term_put_normal();
-		} else if(strncmp(ARGUMENT, "bold", argument_length) == 0) {
+		else if(strncmp(ARGUMENT, "bold", argument_length) == 0)
 			term_put_bold();
-		} else if(strncmp(ARGUMENT, "underline", argument_length) == 0) {
+		else if(strncmp(ARGUMENT, "underline", argument_length) == 0)
 			term_put_underline();
-<<<<<<< HEAD
 		else if(strncmp(ARGUMENT, "colors", argument_length) == 0)
 			term_put_term_colors();
 		else
-=======
-		} else {
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 			term_put_error_attribute_invalid(ARGUMENT);
-		}
 	}
 }

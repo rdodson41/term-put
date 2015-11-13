@@ -27,7 +27,6 @@
 
 //  Include C standard header files
 #include <stdbool.h>
-<<<<<<< HEAD
 
 //  Define FWRITE to write a constant string to a file
 #define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
@@ -36,27 +35,13 @@ void term_put_term_set(char* term);
 void term_put_term_colors_set(char* term_colors);
 void term_put_term_colors();
 
-=======
-
-//  Define FWRITE to write a constant string to a file
-#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
-
-void term_put_term_set(char* term);
-void term_put_term_colors_set(char* term_colors);
-
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 void term_put_error_option_invalid(const char* option);
 void term_put_error_option_malformed(const char* option);
 void term_put_error_option_short_invalid(const char option);
 void term_put_error_attribute_invalid(const char* attribute);
 void term_put_error_attribute_malformed(const char* attribute);
-<<<<<<< HEAD
 void term_put_error_term_colors_undefined();
 
-=======
-
-void term_put_warning_term_unavailable(const bool term_env, const char* term);
->>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 void term_put_warning_term_unsupported(const bool term_env, const char* term);
 void term_put_warning_term_generic(const bool term_env, const char* term);
 void term_put_warning_term_hard_copy(const bool term_env, const char* term);
