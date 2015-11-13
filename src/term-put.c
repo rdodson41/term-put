@@ -120,6 +120,10 @@ int main(int argc, char* argv[])
 			term_put_bold();
 		else if(STRNCMP(ARGUMENT, "underline") == 0)
 			term_put_underline();
+		else if(STRNCMP(ARGUMENT, "foreground") == 0)
+			;
+		else if(STRNCMP(ARGUMENT, "background") == 0)
+			;
 		else if(STRNCMP(ARGUMENT, "colors") == 0)
 			term_put_term_colors();
 		else
