@@ -34,10 +34,16 @@
 #define ARGUMENT (*(argv))
 #define OPTION ((ARGUMENT) + 2)
 
+//  Define FWRITE to write a constant string to a file
+#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
+
+//  Define STRNCMP to compare a string argument to a constant string
+#define STRNCMP(ARGUMENT, STRING) strncmp(ARGUMENT, STRING, sizeof(STRING) - sizeof(char))
+
 //  Print term-put usage to standard error and exit
 void term_put_usage()
 {
-	static const char TERM_PUT_USAGE[] =
+	FWRITE(stderr,
 		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
 		"\n"
 		"        --help               print term-put help\n"
@@ -45,38 +51,33 @@ void term_put_usage()
 		"        --term=<term>        set terminal type to <term>\n"
 		"        --colors=<colors>    set number of terminal colors to <colors>\n"
 		"\n"
-	;
-	FWRITE(stderr, TERM_PUT_USAGE);
+	);
 	exit(1);
 }
 
 //  Print term-put version to standard error and exit
 void term_put_version()
 {
-	static const char TERM_PUT_VERSION[] = "term-put: version: 0.0.0\n";
-	FWRITE(stderr, TERM_PUT_VERSION);
+	FWRITE(stderr, "term-put: version: 0.0.0\n");
 	exit(1);
 }
 
 //  Disable terminal output attributes
 void term_put_normal()
 {
-	static const char TERM_PUT_NORMAL[] = "\x1b[0m";
-	FWRITE(stdout, TERM_PUT_NORMAL);
+	FWRITE(stdout, "\x1b[0m");
 }
 
 //  Enable bold terminal output
 void term_put_bold()
 {
-	static const char TERM_PUT_BOLD[] = "\x1b[1m";
-	FWRITE(stdout, TERM_PUT_BOLD);
+	FWRITE(stdout, "\x1b[1m");
 }
 
 //  Enable underlined terminal output
 void term_put_underline()
 {
-	static const char TERM_PUT_UNDERLINE[] = "\x1b[4m";
-	FWRITE(stdout, TERM_PUT_UNDERLINE);
+	FWRITE(stdout, "\x1b[4m");
 }
 
 //  Process command line arguments
@@ -92,18 +93,18 @@ int main(int argc, char* argv[])
 
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
-				if(strcmp("help", OPTION) == 0)
+				if(STRNCMP(OPTION, "help") == 0)
 					term_put_usage();
-				else if(strcmp("usage", OPTION) == 0)
+				else if(STRNCMP(OPTION, "usage") == 0)
 					term_put_usage();
-				else if(strcmp("version", OPTION) == 0)
+				else if(STRNCMP(OPTION, "version") == 0)
 					term_put_version();
-				else if(strcmp("term", OPTION) == 0)
+				else if(STRNCMP(OPTION, "term") == 0)
 					if(value == NULL)
 						term_put_error_option_malformed(ARGUMENT);
 					else
 						term_put_term_set(value);
-				else if(strcmp("colors", OPTION) == 0)
+				else if(STRNCMP(OPTION, "colors") == 0)
 					if(value == NULL)
 						term_put_error_option_malformed(ARGUMENT);
 					else
@@ -113,13 +114,13 @@ int main(int argc, char* argv[])
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					term_put_error_option_short_invalid(*ARGUMENT);
-		else if(strcmp("normal", ARGUMENT) == 0)
+		else if(STRNCMP(ARGUMENT, "normal") == 0)
 			term_put_normal();
-		else if(strcmp("bold", ARGUMENT) == 0)
+		else if(STRNCMP(ARGUMENT, "bold") == 0)
 			term_put_bold();
-		else if(strcmp("underline", ARGUMENT) == 0)
+		else if(STRNCMP(ARGUMENT, "underline") == 0)
 			term_put_underline();
-		else if(strcmp("colors", ARGUMENT) == 0)
+		else if(STRNCMP(ARGUMENT, "colors") == 0)
 			term_put_term_colors();
 		else
 			term_put_error_attribute_invalid(ARGUMENT);
