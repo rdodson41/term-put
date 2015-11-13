@@ -30,15 +30,16 @@
 //  Include term-put header files
 #include <term-put.h>
 
-//  Define macros to process command line arguments
-#define ARGUMENT (*(argv))
-#define OPTION ((ARGUMENT) + 2)
+//  Define macro variables to process command line arguments
+#define ARGUMENT (*argv)
+#define OPTION (ARGUMENT + 2)
+#define VALUE (separator == NULL ? NULL : separator + 1)
+
+//  Define STRNCMP to compare a constant string to an argument
+#define STRNCMP(ARGUMENT, STRING) strncmp(ARGUMENT, STRING, sizeof(STRING) - sizeof(char))
 
 //  Define FWRITE to write a constant string to a file
 #define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
-
-//  Define STRNCMP to compare a string argument to a constant string
-#define STRNCMP(ARGUMENT, STRING) strncmp(ARGUMENT, STRING, sizeof(STRING) - sizeof(char))
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
@@ -89,7 +90,6 @@ int main(int argc, char* argv[])
 	for(argv++; --argc > 0; argv++)
 	{
 		char* separator = strchr(ARGUMENT, '=');
-		char* value = separator == NULL ? NULL : separator + 1;
 
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
@@ -100,15 +100,15 @@ int main(int argc, char* argv[])
 				else if(STRNCMP(OPTION, "version") == 0)
 					term_put_version();
 				else if(STRNCMP(OPTION, "term") == 0)
-					if(value == NULL)
+					if(separator == NULL)
 						term_put_error_option_malformed(ARGUMENT);
 					else
-						term_put_term_set(value);
+						term_put_term_set(VALUE);
 				else if(STRNCMP(OPTION, "colors") == 0)
-					if(value == NULL)
+					if(separator == NULL)
 						term_put_error_option_malformed(ARGUMENT);
 					else
-						term_put_term_colors_set(value);
+						term_put_term_colors_set(VALUE);
 				else
 					term_put_error_option_invalid(ARGUMENT);
 			else
