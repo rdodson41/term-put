@@ -107,7 +107,7 @@ void term_put_term_colors_set(char* term_colors)
 //  Print number of terminal colors to standard output
 void term_put_term_colors() {
 	if(_term_colors.null)
-		term_put_error_term_colors_undefined();
+		term_put_warning_term_colors_undefined();
 	else
 		fprintf(stdout, "%ld\n", _term_colors.value);
 }
