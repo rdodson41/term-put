@@ -60,10 +60,3 @@ void term_put_error_attribute_malformed(const char* attribute)
 	fprintf(stderr, "term-put: error: Malformed attribute: \"%s\" requires a value\n", attribute);
 	exit(1);
 }
-
-//  Print term-put error: Terminal colors are undefined to standard error and exit
-void term_put_error_term_colors_undefined()
-{
-	fprintf(stderr, "term-put: error: Terminal colors are undefined\n");
-	exit(1);
-}

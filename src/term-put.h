@@ -37,7 +37,6 @@ void term_put_error_option_malformed(const char* option);
 void term_put_error_option_short_invalid(const char option);
 void term_put_error_attribute_invalid(const char* attribute);
 void term_put_error_attribute_malformed(const char* attribute);
-void term_put_error_term_colors_undefined();
 
 void term_put_warning_term_unsupported(const bool term_env, const char* term);
 void term_put_warning_term_generic(const bool term_env, const char* term);
@@ -47,5 +46,6 @@ void term_put_warning_term_colors_unsupported(const bool term_env, const char* t
 void term_put_warning_term_colors_conversion_failure(const bool term_colors_env, const char* term_colors);
 void term_put_warning_term_colors_overflow(const bool term_colors_env, const char* term_colors);
 void term_put_warning_term_colors_underflow(const bool term_colors_env, const char* term_colors);
+void term_put_warning_term_colors_undefined();
 
 #endif

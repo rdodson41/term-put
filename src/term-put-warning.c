@@ -73,3 +73,9 @@ void term_put_warning_term_colors_underflow(const bool term_colors_env, const ch
 {
 	fprintf(stderr, "term-put: warning: %s is out of range: \"%s\"\n", term_colors_env ? "TERM_COLORS" : "Number of terminal colors", term_colors);
 }
+
+//  Print term-put warning: Terminal colors are undefined to standard error and exit
+void term_put_warning_term_colors_undefined()
+{
+	fprintf(stderr, "term-put: warning: Terminal colors are undefined\n");
+}
