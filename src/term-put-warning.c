@@ -23,53 +23,96 @@
 //
 
 //  Include C standard header files
+<<<<<<< HEAD
 #include <stdbool.h>
 #include <stdio.h>
 
 //  Print term-put warning: Terminal is unsupported to standard error
 void term_put_warning_term_unsupported(const bool term_env, const char* term)
 {
+=======
+#include <stdio.h>
+
+//  Include term-put header files
+#include <term-put.h>
+
+//  Print term-put warning: Terminal is unavailable to standard error
+void term_put_warning_term_unavailable(const bool term_env, const char* term) {
+	fprintf(stderr, "term-put: warning: %s is unavailable: \"%s\"\n", term_env ? "TERM" : "Terminal", term);
+}
+
+//  Print term-put warning: Terminal is unsupported to standard error
+void term_put_warning_term_unsupported(const bool term_env, const char* term) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s is unsupported: \"%s\"\n", term_env ? "TERM" : "Terminal", term);
 }
 
 //  Print term-put warning: Terminal is a generic terminal to standard error
+<<<<<<< HEAD
 void term_put_warning_term_generic(const bool term_env, const char* term)
 {
+=======
+void term_put_warning_term_generic(const bool term_env, const char* term) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s is a generic terminal: \"%s\"\n", term_env ? "TERM" : "Terminal", term);
 }
 
 //  Print term-put warning: Terminal is a hard-copy terminal to standard error
+<<<<<<< HEAD
 void term_put_warning_term_hard_copy(const bool term_env, const char* term)
 {
+=======
+void term_put_warning_term_hard_copy(const bool term_env, const char* term) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s is a hard-copy terminal: \"%s\"\n", term_env ? "TERM" : "Terminal", term);
 }
 
 //  Print term-put warning: Terminal colors are unavailable to standard error
+<<<<<<< HEAD
 void term_put_warning_term_colors_unavailable(const bool term_env, const char* term)
 {
+=======
+void term_put_warning_term_colors_unavailable(const bool term_env, const char* term) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s colors are unavailable: \"%s\"\n", term_env ? "TERM" : "Terminal", term);
 }
 
 //  Print term-put warning: Terminal colors are unsupported to standard error
+<<<<<<< HEAD
 void term_put_warning_term_colors_unsupported(const bool term_env, const char* term)
 {
+=======
+void term_put_warning_term_colors_unsupported(const bool term_env, const char* term) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s colors are unsupported: \"%s\"\n", term_env ? "TERM" : "Terminal", term);
 }
 
 //  Print term-put warning: Failed to convert number of terminal colors to a long integer to standard error
+<<<<<<< HEAD
 void term_put_warning_term_colors_conversion_failure(const bool term_colors_env, const char* term_colors)
 {
+=======
+void term_put_warning_term_colors_conversion_failure(const bool term_colors_env, const char* term_colors) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: Failed to convert %s to a long integer: \"%s\"\n", term_colors_env ? "TERM_COLORS" : "number of terminal colors", term_colors);
 }
 
 // Print term-put warning: Number of terminal colors is out of range to standard error
+<<<<<<< HEAD
 void term_put_warning_term_colors_overflow(const bool term_colors_env, const char* term_colors)
 {
+=======
+void term_put_warning_term_colors_overflow(const bool term_colors_env, const char* term_colors) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s is out of range: \"%s\"\n", term_colors_env ? "TERM_COLORS" : "Number of terminal colors", term_colors);
 }
 
 // Print term-put warning: Number of terminal colors is out of range to standard error
+<<<<<<< HEAD
 void term_put_warning_term_colors_underflow(const bool term_colors_env, const char* term_colors)
 {
+=======
+void term_put_warning_term_colors_underflow(const bool term_colors_env, const char* term_colors) {
+>>>>>>> fd2aae5877e57203f5b63980e996be0f8b08c524
 	fprintf(stderr, "term-put: warning: %s is out of range: \"%s\"\n", term_colors_env ? "TERM_COLORS" : "Number of terminal colors", term_colors);
 }
