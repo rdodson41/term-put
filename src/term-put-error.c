@@ -26,37 +26,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//  Print term-put error: Invalid option to standard error and exit
+//  Print invalid term-put option error to standard error and exit
 void term_put_error_option_invalid(const char* option)
 {
-	fprintf(stderr, "term-put: error: Invalid option: \"%s\"\n", option);
+	fprintf(stderr, "term-put: error: \"%s\" is not a valid option\n", option);
 	exit(1);
 }
 
-//  Print term-put error: Malformed option to standard error and exit
-void term_put_error_option_malformed(const char* option)
+//  Print incomplete term-put option error to standard error and exit
+void term_put_error_option_incomplete(const char* option)
 {
-	fprintf(stderr, "term-put: error: Malformed option: \"%s\" requires an argument\n", option);
+	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", option);
 	exit(1);
 }
 
-//  Print term-put error: Invalid option to standard error and exit
+//  Print invalid term-put option error to standard error and exit
 void term_put_error_option_short_invalid(const char option)
 {
-	fprintf(stderr, "term-put: error: Invalid option: \"-%c\"\n", option);
+	fprintf(stderr, "term-put: error: \"-%c\" is not a valid option\n", option);
 	exit(1);
 }
 
-//  Print term-put error: Invalid attribute to standard error and exit
+//  Print invalid term-put attribute error to standard error and exit
 void term_put_error_attribute_invalid(const char* attribute)
 {
-	fprintf(stderr, "term-put: error: Invalid attribute: \"%s\"\n", attribute);
+	fprintf(stderr, "term-put: error: \"%s\" is not a valid attribute\n", attribute);
 	exit(1);
 }
 
-//  Print term-put error: Malformed attribute to standard error and exit
-void term_put_error_attribute_malformed(const char* attribute)
+//  Print incomplete term-put attribute error to standard error and exit
+void term_put_error_attribute_incomplete(const char* attribute)
 {
-	fprintf(stderr, "term-put: error: Malformed attribute: \"%s\" requires a value\n", attribute);
+	fprintf(stderr, "term-put: error: \"%s\" requires a value\n", attribute);
 	exit(1);
 }
