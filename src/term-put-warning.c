@@ -87,13 +87,13 @@ void term_put_warning_term_color_conversion_failure(const char* term_color)
 }
 
 // Print term-put warning: Terminal color is out of range to standard error
-void term_put_warning_term_colors_overflow(const char* term_color)
+void term_put_warning_term_color_overflow(const char* term_color)
 {
 	fprintf(stderr, "term-put: warning: Terminal color is out of range: \"%s\"\n", term_color);
 }
 
 // Print term-put warning: Terminal color is out of range to standard error
-void term_put_warning_term_colors_underflow(const char* term_color)
+void term_put_warning_term_color_underflow(const char* term_color)
 {
 	fprintf(stderr, "term-put: warning: Terminal color is out of range: \"%s\"\n", term_color);
 }
