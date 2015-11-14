@@ -35,30 +35,26 @@ typedef struct
 }
 LongOptional;
 
-typedef LongOptional TermColors;
-typedef LongOptional TermColor;
-
-void term_put_term_set(char* term);
-void term_put_term_colors_set(char* term_colors);
-TermColors term_put_term_colors_get();
-TermColor term_put_term_color_get(char* term_color);
+void term_put_term_set(char* value);
+void term_put_term_colors_set(char* value);
+LongOptional term_put_term_colors_get();
+LongOptional term_put_term_color_get(char* value);
 
 void term_put_error_option_invalid(const char* option);
-void term_put_error_option_malformed(const char* option);
+void term_put_error_option_incomplete(const char* option);
 void term_put_error_option_short_invalid(const char option);
 void term_put_error_attribute_invalid(const char* attribute);
-void term_put_error_attribute_malformed(const char* attribute);
+void term_put_error_attribute_incomplete(const char* attribute);
 
-void term_put_warning_term_unsupported(const bool term_env, const char* term);
-void term_put_warning_term_generic(const bool term_env, const char* term);
-void term_put_warning_term_hard_copy(const bool term_env, const char* term);
-void term_put_warning_term_colors_unavailable(const bool term_env, const char* term);
-void term_put_warning_term_colors_unsupported(const bool term_env, const char* term);
-void term_put_warning_term_colors_conversion_failure(const bool term_colors_env, const char* term_colors);
-void term_put_warning_term_colors_overflow(const bool term_colors_env, const char* term_colors);
-void term_put_warning_term_colors_underflow(const bool term_colors_env, const char* term_colors);
-void term_put_warning_term_colors_undefined();
-void term_put_warning_term_color_conversion_failure(const char* term_color);
+void term_put_warning_term_unsupported(const char* term);
+void term_put_warning_term_generic(const char* term);
+void term_put_warning_term_hard_copy(const char* term);
+void term_put_warning_term_colors_unavailable(const char* term);
+void term_put_warning_term_colors_unsupported(const char* term);
+void term_put_warning_term_colors_invalid(const char* term_colors);
+void term_put_warning_term_colors_overflow(const char* term_colors);
+void term_put_warning_term_colors_underflow(const char* term_colors);
+void term_put_warning_term_color_invalid(const char* term_color);
 void term_put_warning_term_color_overflow(const char* term_color);
 void term_put_warning_term_color_underflow(const char* term_color);
 
