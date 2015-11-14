@@ -58,5 +58,8 @@ void term_put_warning_term_colors_conversion_failure(const bool term_colors_env,
 void term_put_warning_term_colors_overflow(const bool term_colors_env, const char* term_colors);
 void term_put_warning_term_colors_underflow(const bool term_colors_env, const char* term_colors);
 void term_put_warning_term_colors_undefined();
+void term_put_warning_term_color_conversion_failure(const char* term_color);
+void term_put_warning_term_color_overflow(const char* term_color);
+void term_put_warning_term_color_underflow(const char* term_color);
 
 #endif

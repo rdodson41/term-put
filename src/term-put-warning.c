@@ -74,8 +74,26 @@ void term_put_warning_term_colors_underflow(const bool term_colors_env, const ch
 	fprintf(stderr, "term-put: warning: %s is out of range: \"%s\"\n", term_colors_env ? "TERM_COLORS" : "Number of terminal colors", term_colors);
 }
 
-//  Print term-put warning: Terminal colors are undefined to standard error and exit
+//  Print term-put warning: Number of terminal colors is undefined to standard error
 void term_put_warning_term_colors_undefined()
 {
-	fprintf(stderr, "term-put: warning: Terminal colors are undefined\n");
+	fprintf(stderr, "term-put: warning: Number of terminal colors is undefined\n");
+}
+
+//  Print term-put warning: Failed to convert terminal color to a long integer to standard error
+void term_put_warning_term_color_conversion_failure(const char* term_color)
+{
+	fprintf(stderr, "term-put: warning: Failed to convert terminal color to a long integer: \"%s\"\n", term_color);
+}
+
+// Print term-put warning: Terminal color is out of range to standard error
+void term_put_warning_term_colors_overflow(const char* term_color)
+{
+	fprintf(stderr, "term-put: warning: Terminal color is out of range: \"%s\"\n", term_color);
+}
+
+// Print term-put warning: Terminal color is out of range to standard error
+void term_put_warning_term_colors_underflow(const char* term_color)
+{
+	fprintf(stderr, "term-put: warning: Terminal color is out of range: \"%s\"\n", term_color);
 }
