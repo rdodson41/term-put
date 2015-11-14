@@ -38,18 +38,15 @@
 //  Define STRNCMP to compare a constant string to an argument
 #define STRNCMP(ARGUMENT, STRING) strncmp(ARGUMENT, STRING, sizeof(STRING) - sizeof(char))
 
-//  Define FWRITE to write a constant string to a file
-#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
-
 //  Print term-put usage to standard error and exit
 void term_put_usage()
 {
-	FWRITE(stderr,
+	fprintf(stderr,
 		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
 		"\n"
 		"        --help               print term-put help\n"
 		"        --version            print term-put version\n"
-		"        --term=<term>        set terminal type to <term>\n"
+		"        --term=<term>        set terminal to <term>\n"
 		"        --colors=<colors>    set number of terminal colors to <colors>\n"
 		"\n"
 	);
@@ -59,35 +56,94 @@ void term_put_usage()
 //  Print term-put version to standard error and exit
 void term_put_version()
 {
-	FWRITE(stderr, "term-put: version: 0.0.0\n");
+	fprintf(stderr, "term-put: version: 0.0.0\n");
 	exit(1);
 }
 
 //  Disable terminal output attributes
 void term_put_normal()
 {
-	FWRITE(stdout, "\x1b[0m");
+	fprintf(stdout, "\x1b[0m");
 }
 
 //  Enable bold terminal output
 void term_put_bold()
 {
-	FWRITE(stdout, "\x1b[1m");
+	fprintf(stdout, "\x1b[1m");
 }
 
 //  Enable underlined terminal output
 void term_put_underline()
 {
-	FWRITE(stdout, "\x1b[4m");
+	fprintf(stdout, "\x1b[4m");
+}
+
+//  Print terminal to standard output
+void term_put_term() {
+	const char* term = term_put_term_get();
+	if(term != NULL)
+		fprintf(stdout, "%s\n", term);
 }
 
 //  Print number of terminal colors to standard output
 void term_put_term_colors() {
-	const TermColors term_colors = term_put_term_colors_get();
+	const LongOptional term_colors = term_put_term_colors_get();
 	if(term_colors.has_value)
 		fprintf(stdout, "%ld\n", term_colors.value);
-	else
-		term_put_warning_term_colors_undefined();
+}
+
+//  Set foreground terminal output color
+void term_put_foreground(char* value) {
+	const LongOptional term_colors = term_put_term_colors_get();
+	if(!term_colors.has_value)
+		return;
+	const LongOptional term_color = term_put_term_color_get(value);
+	if(!term_color.has_value)
+		return;
+	if(term_colors.value >= 256)
+	{
+		if(0 <= term_color.value && term_color.value < term_colors.value)
+			fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
+	}
+	else if(term_colors.value >= 16)
+	{
+		if(0 <= term_color.value && term_color.value < 8)
+			fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
+		else if(8 <= term_color.value && term_color.value < 16)
+			fprintf(stdout, "\x1b[%ldm", 90 + term_color.value);
+	}
+	else if(term_colors.value >= 8)
+	{
+		if(0 <= term_color.value && term_color.value < 8)
+			fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
+	}
+}
+
+//  Set background terminal output color
+void term_put_background(char* value) {
+	const LongOptional term_colors = term_put_term_colors_get();
+	if(!term_colors.has_value)
+		return;
+	const LongOptional term_color = term_put_term_color_get(value);
+	if(!term_color.has_value)
+		return;
+	if(term_colors.value >= 256)
+	{
+		if(0 <= term_color.value && term_color.value < term_colors.value)
+			fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
+	}
+	else if(term_colors.value >= 16)
+	{
+		if(0 <= term_color.value && term_color.value < 8)
+			fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
+		else if(8 <= term_color.value && term_color.value < 16)
+			fprintf(stdout, "\x1b[%ldm", 100 + term_color.value);
+	}
+	else if(term_colors.value >= 8)
+	{
+		if(0 <= term_color.value && term_color.value < 8)
+			fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
+	}
 }
 
 //  Process command line arguments
@@ -110,12 +166,12 @@ int main(int argc, char* argv[])
 					term_put_version();
 				else if(STRNCMP(OPTION, "term") == 0)
 					if(separator == NULL)
-						term_put_error_option_malformed(ARGUMENT);
+						term_put_error_option_incomplete(ARGUMENT);
 					else
 						term_put_term_set(VALUE);
 				else if(STRNCMP(OPTION, "colors") == 0)
 					if(separator == NULL)
-						term_put_error_option_malformed(ARGUMENT);
+						term_put_error_option_incomplete(ARGUMENT);
 					else
 						term_put_term_colors_set(VALUE);
 				else
@@ -129,8 +185,20 @@ int main(int argc, char* argv[])
 			term_put_bold();
 		else if(STRNCMP(ARGUMENT, "underline") == 0)
 			term_put_underline();
+		else if(STRNCMP(ARGUMENT, "term") == 0)
+			term_put_term();
 		else if(STRNCMP(ARGUMENT, "colors") == 0)
 			term_put_term_colors();
+		else if(STRNCMP(ARGUMENT, "foreground") == 0)
+			if(separator == NULL)
+				term_put_error_attribute_incomplete(ARGUMENT);
+			else
+				term_put_foreground(VALUE);
+		else if(STRNCMP(ARGUMENT, "background") == 0)
+			if(separator == NULL)
+				term_put_error_attribute_incomplete(ARGUMENT);
+			else
+				term_put_background(VALUE);
 		else
 			term_put_error_attribute_invalid(ARGUMENT);
 	}
