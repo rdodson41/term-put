@@ -26,6 +26,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 
 //  Include POSIX standard header files
 #include <unistd.h>
@@ -100,4 +101,56 @@ void term_put_term_colors_set(char* term_colors)
 //  Get number of terminal colors
 TermColors term_put_term_colors_get() {
 	return _term_colors;
+}
+
+//  Get terminal color
+TermColor term_put_term_color_get(char* term_color) {
+	if(term_color == NULL)
+		return (TermColor) { 0x00, false };
+	else if(strcmp(term_color, "black") == 0)
+		return (TermColor) { 0x00, true };
+	else if(strcmp(term_color, "red") == 0)
+		return (TermColor) { 0x01, true };
+	else if(strcmp(term_color, "green") == 0)
+		return (TermColor) { 0x02, true };
+	else if(strcmp(term_color, "yellow") == 0)
+		return (TermColor) { 0x03, true };
+	else if(strcmp(term_color, "blue") == 0)
+		return (TermColor) { 0x04, true };
+	else if(strcmp(term_color, "magenta") == 0)
+		return (TermColor) { 0x05, true };
+	else if(strcmp(term_color, "cyan") == 0)
+		return (TermColor) { 0x06, true };
+	else if(strcmp(term_color, "white") == 0)
+		return (TermColor) { 0x07, true };
+	else if(strcmp(term_color, "bright-black") == 0)
+		return (TermColor) { 0x08, true };
+	else if(strcmp(term_color, "bright-red") == 0)
+		return (TermColor) { 0x09, true };
+	else if(strcmp(term_color, "bright-green") == 0)
+		return (TermColor) { 0x0A, true };
+	else if(strcmp(term_color, "bright-yellow") == 0)
+		return (TermColor) { 0x0B, true };
+	else if(strcmp(term_color, "bright-blue") == 0)
+		return (TermColor) { 0x0C, true };
+	else if(strcmp(term_color, "bright-magenta") == 0)
+		return (TermColor) { 0x0D, true };
+	else if(strcmp(term_color, "bright-cyan") == 0)
+		return (TermColor) { 0x0E, true };
+	else if(strcmp(term_color, "bright-white") == 0)
+		return (TermColor) { 0x0F, true };
+	errno = 0;
+	char* term_color_end;
+	const long term_color_value = strtol(term_color, &term_color_end, 0);
+	if(errno == EINVAL)
+		term_put_warning_term_color_conversion_failure(term_color);
+	else if(errno == ERANGE && term_color_value == LONG_MAX)
+		term_put_warning_term_color_overflow(term_color);
+	else if(errno == ERANGE && term_color_value == LONG_MIN)
+		term_put_warning_term_color_underflow(term_color);
+	else if(term_color_end[0] != '\0')
+		term_put_warning_term_color_conversion_failure(term_color);
+	else
+		return (TermColor) { term_color_value, true };
+	return (TermColor) { 0x00, false };
 }
