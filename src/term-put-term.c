@@ -37,14 +37,7 @@
 //  Include term-put header files
 #include <term-put.h>
 
-typedef struct
-{
-	bool null;
-	long value;
-}
-OptionalLong;
-
-static OptionalLong _term_colors = { true, 0 };
+static TermColors _term_colors = { 0, false };
 
 //  Set terminal type
 void term_put_term_set(char* term)
@@ -66,7 +59,7 @@ void term_put_term_set(char* term)
 		else if(term_colors_value == -1)
 			term_put_warning_term_colors_unsupported(term_env, term);
 		else
-			_term_colors = (OptionalLong) { false, term_colors_value };
+			_term_colors = (TermColors) { term_colors_value, true };
 	}
 	else if(status == ERR)
 	{
@@ -101,13 +94,10 @@ void term_put_term_colors_set(char* term_colors)
 	else if(term_colors_end[0] != '\0')
 		term_put_warning_term_colors_conversion_failure(term_colors_env, term_colors);
 	else
-		_term_colors = (OptionalLong) { false, term_colors_value };
+		_term_colors = (TermColors) { term_colors_value, true };
 }
 
-//  Print number of terminal colors to standard output
-void term_put_term_colors() {
-	if(_term_colors.null)
-		term_put_warning_term_colors_undefined();
-	else
-		fprintf(stdout, "%ld\n", _term_colors.value);
+//  Get number of terminal colors
+TermColors term_put_term_colors_get() {
+	return _term_colors;
 }
