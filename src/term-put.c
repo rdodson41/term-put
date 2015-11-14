@@ -81,6 +81,15 @@ void term_put_underline()
 	FWRITE(stdout, "\x1b[4m");
 }
 
+//  Print number of terminal colors to standard output
+void term_put_term_colors() {
+	const TermColors term_colors = term_put_term_colors_get();
+	if(term_colors.has_value)
+		fprintf(stdout, "%ld\n", term_colors.value);
+	else
+		term_put_warning_term_colors_undefined();
+}
+
 //  Process command line arguments
 int main(int argc, char* argv[])
 {
