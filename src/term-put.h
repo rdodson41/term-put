@@ -28,9 +28,16 @@
 //  Include C standard header files
 #include <stdbool.h>
 
+typedef struct
+{
+	long value;
+	bool has_value;
+}
+TermColors;
+
 void term_put_term_set(char* term);
 void term_put_term_colors_set(char* term_colors);
-void term_put_term_colors();
+TermColors term_put_term_colors_get();
 
 void term_put_error_option_invalid(const char* option);
 void term_put_error_option_malformed(const char* option);
