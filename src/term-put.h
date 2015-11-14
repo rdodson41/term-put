@@ -33,11 +33,15 @@ typedef struct
 	long value;
 	bool has_value;
 }
-TermColors;
+LongOptional;
+
+typedef LongOptional TermColors;
+typedef LongOptional TermColor;
 
 void term_put_term_set(char* term);
 void term_put_term_colors_set(char* term_colors);
 TermColors term_put_term_colors_get();
+TermColor term_put_term_color_get(char* term_color);
 
 void term_put_error_option_invalid(const char* option);
 void term_put_error_option_malformed(const char* option);
