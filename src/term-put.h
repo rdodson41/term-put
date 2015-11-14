@@ -36,6 +36,7 @@ typedef struct
 LongOptional;
 
 void term_put_term_set(char* value);
+char* term_put_term_get();
 void term_put_term_colors_set(char* value);
 LongOptional term_put_term_colors_get();
 LongOptional term_put_term_color_get(char* value);
