@@ -166,16 +166,16 @@ int main(int argc, char* argv[])
 					term_put_version();
 				else if(STRNCMP(OPTION, "term") == 0)
 					if(separator == NULL)
-						term_put_error_option_incomplete(ARGUMENT);
+						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_set(VALUE);
 				else if(STRNCMP(OPTION, "colors") == 0)
 					if(separator == NULL)
-						term_put_error_option_incomplete(ARGUMENT);
+						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_colors_set(VALUE);
 				else
-					term_put_error_option_invalid(ARGUMENT);
+					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					term_put_error_option_short_invalid(*ARGUMENT);

@@ -43,7 +43,7 @@ void term_put_error_option_incomplete(const char* option)
 //  Print invalid term-put option error to standard error and exit
 void term_put_error_option_short_invalid(const char option)
 {
-	fprintf(stderr, "term-put: error: \"-%c\" is not a valid option\n", option);
+	fprintf(stderr, "term-put: error: \"%c\" is not a valid option\n", option);
 	exit(1);
 }
 
@@ -57,6 +57,6 @@ void term_put_error_attribute_invalid(const char* attribute)
 //  Print incomplete term-put attribute error to standard error and exit
 void term_put_error_attribute_incomplete(const char* attribute)
 {
-	fprintf(stderr, "term-put: error: \"%s\" requires a value\n", attribute);
+	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", attribute);
 	exit(1);
 }
