@@ -28,6 +28,8 @@
 //  Include C standard header files
 #include <stdbool.h>
 
+typedef char* Term;
+
 typedef struct
 {
 	long value;
@@ -35,16 +37,18 @@ typedef struct
 }
 LongOptional;
 
-void term_put_term_set(char* value);
-char* term_put_term_get();
-void term_put_term_colors_set(char* value);
-LongOptional term_put_term_colors_get();
-LongOptional term_put_term_color_get(char* value);
+typedef LongOptional TermColor;
 
-void term_put_error_option_invalid(const char* option);
+void term_put_term_set(char* value);
+Term term_put_term_get();
+void term_put_term_colors_set(char* value);
+TermColor term_put_term_colors_get();
+TermColor term_put_term_color_get(char* value);
+
+void term_put_error_option_unsupported(const char* option);
 void term_put_error_option_incomplete(const char* option);
-void term_put_error_option_short_invalid(const char option);
-void term_put_error_attribute_invalid(const char* attribute);
+void term_put_error_option_short_unsupported(const char option);
+void term_put_error_attribute_unsupported(const char* attribute);
 void term_put_error_attribute_incomplete(const char* attribute);
 
 void term_put_warning_term_unsupported(const char* term);
