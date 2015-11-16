@@ -26,15 +26,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//  Include term-put header files
+#include <term-put.h>
+#include <term-put-error.h>
+
 //  Print unsupported term-put option error to standard error and exit
-void term_put_error_option_unsupported(const char* option)
+void term_put_error_option_unsupported(const String option)
 {
 	fprintf(stderr, "term-put: error: Option \"%s\" is not supported\n", option);
 	exit(1);
 }
 
 //  Print incomplete term-put option error to standard error and exit
-void term_put_error_option_incomplete(const char* option)
+void term_put_error_option_incomplete(const String option)
 {
 	fprintf(stderr, "term-put: error: Option \"%s\" requires an argument\n", option);
 	exit(1);
@@ -48,14 +52,14 @@ void term_put_error_option_short_unsupported(const char option)
 }
 
 //  Print unsupported term-put attribute error to standard error and exit
-void term_put_error_attribute_unsupported(const char* attribute)
+void term_put_error_attribute_unsupported(const String attribute)
 {
 	fprintf(stderr, "term-put: error: Attribute \"%s\" is not supported\n", attribute);
 	exit(1);
 }
 
 //  Print incomplete term-put attribute error to standard error and exit
-void term_put_error_attribute_incomplete(const char* attribute)
+void term_put_error_attribute_incomplete(const String attribute)
 {
 	fprintf(stderr, "term-put: error: Attribute \"%s\" requires an argument\n", attribute);
 	exit(1);
