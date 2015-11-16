@@ -25,42 +25,22 @@
 #ifndef TERM_PUT
 #define TERM_PUT
 
-//  Include C standard header files
-#include <stdbool.h>
+//  Define macro variables to help process command line arguments
+#define ARGUMENT (*argv)
+#define OPTION (ARGUMENT + 2)
+#define VALUE (separator + 1)
 
-typedef char* Term;
+void term_put_usage();
+void term_put_version();
 
-typedef struct
-{
-	long value;
-	bool has_value;
-}
-LongOptional;
+void term_put_term();
+void term_put_term_color_count();
 
-typedef LongOptional TermColor;
+void term_put_normal();
+void term_put_bold();
+void term_put_underline();
 
-void term_put_term_set(char* value);
-Term term_put_term_get();
-void term_put_term_colors_set(char* value);
-TermColor term_put_term_colors_get();
-TermColor term_put_term_color_get(char* value);
-
-void term_put_error_option_unsupported(const char* option);
-void term_put_error_option_incomplete(const char* option);
-void term_put_error_option_short_unsupported(const char option);
-void term_put_error_attribute_unsupported(const char* attribute);
-void term_put_error_attribute_incomplete(const char* attribute);
-
-void term_put_warning_term_unsupported(const char* term);
-void term_put_warning_term_generic(const char* term);
-void term_put_warning_term_hard_copy(const char* term);
-void term_put_warning_term_colors_unavailable(const char* term);
-void term_put_warning_term_colors_unsupported(const char* term);
-void term_put_warning_term_colors_invalid(const char* term_colors);
-void term_put_warning_term_colors_overflow(const char* term_colors);
-void term_put_warning_term_colors_underflow(const char* term_colors);
-void term_put_warning_term_color_invalid(const char* term_color);
-void term_put_warning_term_color_overflow(const char* term_color);
-void term_put_warning_term_color_underflow(const char* term_color);
+void term_put_foreground(char* value);
+void term_put_background(char* value);
 
 #endif
