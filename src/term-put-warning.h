@@ -28,7 +28,7 @@
 //  Include term-put header files
 #include <term-put.h>
 
-void term_put_warning_term_unsupported(const String term);
+void term_put_warning_term_invalid(const String term);
 void term_put_warning_term_generic(const String term);
 void term_put_warning_term_hard_copy(const String term);
 void term_put_warning_term_color_count_unsupported(const String term);
