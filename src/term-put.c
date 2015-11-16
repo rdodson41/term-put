@@ -29,27 +29,13 @@
 
 //  Include term-put header files
 #include <term-put.h>
-
-//  Define macro variables to process command line arguments
-#define ARGUMENT (*argv)
-#define OPTION (ARGUMENT + 2)
-#define VALUE (separator == NULL ? NULL : separator + 1)
-
-//  Define STRNCMP to compare a constant string to an argument
-#define STRNCMP(ARGUMENT, STRING) strncmp(ARGUMENT, STRING, sizeof(STRING) - sizeof(char))
+#include <term-put-term.h>
+#include <term-put-error.h>
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
 {
-	fprintf(stderr,
-		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
-		"\n"
-		"        --help               print term-put help\n"
-		"        --version            print term-put version\n"
-		"        --term=<term>        set terminal to <term>\n"
-		"        --colors=<colors>    set number of terminal colors to <colors>\n"
-		"\n"
-	);
+	fprintf(stderr, "term-put: usage: term-put [<option>|<attribute>[=<value>]] ...\n");
 	exit(1);
 }
 
@@ -60,89 +46,81 @@ void term_put_version()
 	exit(1);
 }
 
-//  Disable terminal output attributes
+//  Print term-put terminal type to standard output
+void term_put_term()
+{
+	const Term term = term_put_term_get();
+	if(term != NULL)
+		fprintf(stdout, "%s\n", term);
+}
+
+//  Print count of term-put terminal colors to standard output
+void term_put_term_color_count()
+{
+	const TermColor term_color_count = term_put_term_color_count_get();
+	if(term_color_count.has_value)
+		fprintf(stdout, "%ld\n", term_color_count.value);
+}
+
+//  Disable terminal text attributes
 void term_put_normal()
 {
 	fprintf(stdout, "\x1b[0m");
 }
 
-//  Enable bold terminal output
+//  Enable bold terminal text
 void term_put_bold()
 {
 	fprintf(stdout, "\x1b[1m");
 }
 
-//  Enable underlined terminal output
+//  Enable underlined terminal text
 void term_put_underline()
 {
 	fprintf(stdout, "\x1b[4m");
 }
 
-//  Print terminal to standard output
-void term_put_term() {
-	const char* term = term_put_term_get();
-	if(term != NULL)
-		fprintf(stdout, "%s\n", term);
-}
-
-//  Print number of terminal colors to standard output
-void term_put_term_colors() {
-	const LongOptional term_colors = term_put_term_colors_get();
-	if(term_colors.has_value)
-		fprintf(stdout, "%ld\n", term_colors.value);
-}
-
-//  Set foreground terminal output color
+//  Set foreground terminal text color
 void term_put_foreground(char* value) {
-	const LongOptional term_colors = term_put_term_colors_get();
-	if(!term_colors.has_value)
+	const TermColor term_color_count = term_put_term_color_count_get();
+	if(!term_color_count.has_value)
 		return;
-	const LongOptional term_color = term_put_term_color_get(value);
+	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value)
 		return;
-	if(term_colors.value >= 256)
+	if(term_color_count.value > 16)
 	{
-		if(0 <= term_color.value && term_color.value < term_colors.value)
+		if(0 <= term_color.value && term_color.value < term_color_count.value)
 			fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
 	}
-	else if(term_colors.value >= 16)
+	else
 	{
 		if(0 <= term_color.value && term_color.value < 8)
 			fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
 		else if(8 <= term_color.value && term_color.value < 16)
 			fprintf(stdout, "\x1b[%ldm", 90 + term_color.value);
 	}
-	else if(term_colors.value >= 8)
-	{
-		if(0 <= term_color.value && term_color.value < 8)
-			fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
-	}
 }
 
-//  Set background terminal output color
+//  Set background terminal text color
 void term_put_background(char* value) {
-	const LongOptional term_colors = term_put_term_colors_get();
-	if(!term_colors.has_value)
+	const TermColor term_color_count = term_put_term_color_count_get();
+	if(!term_color_count.has_value)
 		return;
-	const LongOptional term_color = term_put_term_color_get(value);
+	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value)
 		return;
-	if(term_colors.value >= 256)
+	if(term_color_count.value > 16)
 	{
-		if(0 <= term_color.value && term_color.value < term_colors.value)
+		if(0 <= term_color.value && term_color.value < term_color_count.value)
 			fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
 	}
-	else if(term_colors.value >= 16)
+	else
 	{
 		if(0 <= term_color.value && term_color.value < 8)
 			fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
 		else if(8 <= term_color.value && term_color.value < 16)
 			fprintf(stdout, "\x1b[%ldm", 100 + term_color.value);
-	}
-	else if(term_colors.value >= 8)
-	{
-		if(0 <= term_color.value && term_color.value < 8)
-			fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
 	}
 }
 
@@ -150,51 +128,53 @@ void term_put_background(char* value) {
 int main(int argc, char* argv[])
 {
 	term_put_term_set(NULL);
-	term_put_term_colors_set(NULL);
+	term_put_term_color_count_set(NULL);
 
 	for(argv++; --argc > 0; argv++)
 	{
 		char* separator = strchr(ARGUMENT, '=');
+		if(separator != NULL)
+			*separator = '\0';
 
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
-				if(STRNCMP(OPTION, "help") == 0)
+				if(strcmp(OPTION, "help") == 0)
 					term_put_usage();
-				else if(STRNCMP(OPTION, "usage") == 0)
+				else if(strcmp(OPTION, "usage") == 0)
 					term_put_usage();
-				else if(STRNCMP(OPTION, "version") == 0)
+				else if(strcmp(OPTION, "version") == 0)
 					term_put_version();
-				else if(STRNCMP(OPTION, "term") == 0)
+				else if(strcmp(OPTION, "term") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_set(VALUE);
-				else if(STRNCMP(OPTION, "colors") == 0)
+				else if(strcmp(OPTION, "colors") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
-						term_put_term_colors_set(VALUE);
+						term_put_term_color_count_set(VALUE);
 				else
 					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					term_put_error_option_short_invalid(*ARGUMENT);
-		else if(STRNCMP(ARGUMENT, "normal") == 0)
-			term_put_normal();
-		else if(STRNCMP(ARGUMENT, "bold") == 0)
-			term_put_bold();
-		else if(STRNCMP(ARGUMENT, "underline") == 0)
-			term_put_underline();
-		else if(STRNCMP(ARGUMENT, "term") == 0)
+		else if(strcmp(ARGUMENT, "term") == 0)
 			term_put_term();
-		else if(STRNCMP(ARGUMENT, "colors") == 0)
-			term_put_term_colors();
-		else if(STRNCMP(ARGUMENT, "foreground") == 0)
+		else if(strcmp(ARGUMENT, "colors") == 0)
+			term_put_term_color_count();
+		else if(strcmp(ARGUMENT, "normal") == 0)
+			term_put_normal();
+		else if(strcmp(ARGUMENT, "bold") == 0)
+			term_put_bold();
+		else if(strcmp(ARGUMENT, "underline") == 0)
+			term_put_underline();
+		else if(strcmp(ARGUMENT, "foreground") == 0)
 			if(separator == NULL)
 				term_put_error_attribute_incomplete(ARGUMENT);
 			else
 				term_put_foreground(VALUE);
-		else if(STRNCMP(ARGUMENT, "background") == 0)
+		else if(strcmp(ARGUMENT, "background") == 0)
 			if(separator == NULL)
 				term_put_error_attribute_incomplete(ARGUMENT);
 			else
