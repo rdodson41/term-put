@@ -42,7 +42,7 @@
 static Term _term = NULL;
 static TermColor _term_color_count = { 0, false };
 
-//  Set terminal type
+//  Set term-put terminal type
 void term_put_term_set(String value)
 {
 	if(value == NULL)
@@ -75,13 +75,13 @@ void term_put_term_set(String value)
 	}
 }
 
-//  Get terminal type
+//  Get term-put terminal type
 Term term_put_term_get()
 {
 	return _term;
 }
 
-//  Set count of terminal colors
+//  Set count of term-put terminal colors
 void term_put_term_color_count_set(String value)
 {
 	if(value == NULL)
@@ -99,13 +99,13 @@ void term_put_term_color_count_set(String value)
 		_term_color_count = term_color_count;
 }
 
-//  Get count of terminal colors
+//  Get count of term-put terminal colors
 TermColor term_put_term_color_count_get()
 {
 	return _term_color_count;
 }
 
-//  Get terminal color
+//  Get term-put terminal color
 TermColor term_put_term_color_get(String value) {
 	if(value == NULL)
 		return (TermColor) { 0x00, false };
