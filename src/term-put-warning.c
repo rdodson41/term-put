@@ -29,31 +29,31 @@
 //  Print unsupported term-put terminal warning to standard error
 void term_put_warning_term_unsupported(const char* term)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" is not supported\n", term);
+	fprintf(stderr, "term-put: warning: Terminal \"%s\" is not supported\n", term);
 }
 
 //  Print generic term-put terminal warning to standard error
 void term_put_warning_term_generic(const char* term)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" is a generic terminal\n", term);
+	fprintf(stderr, "term-put: warning: Terminal \"%s\" is a generic terminal\n", term);
 }
 
 //  Print hard-copy term-put terminal warning to standard error
 void term_put_warning_term_hard_copy(const char* term)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" is a hard-copy terminal\n", term);
+	fprintf(stderr, "term-put: warning: Terminal \"%s\" is a hard-copy terminal\n", term);
 }
 
 //  Print unavailable term-put terminal colors warning to standard error
 void term_put_warning_term_colors_unavailable(const char* term)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" colors are not available\n", term);
+	fprintf(stderr, "term-put: warning: Terminal \"%s\" colors are not available\n", term);
 }
 
 //  Print unsupported term-put terminal colors warning to standard error
 void term_put_warning_term_colors_unsupported(const char* term)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" colors are not supported\n", term);
+	fprintf(stderr, "term-put: warning: Terminal \"%s\" colors are not supported\n", term);
 }
 
 //  Print invalid number of term-put terminal colors warning to standard error
