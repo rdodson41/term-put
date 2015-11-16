@@ -30,37 +30,37 @@
 #include <term-put.h>
 #include <term-put-error.h>
 
-//  Print unsupported term-put option error to standard error and exit
-void term_put_error_option_unsupported(const String option)
+//  Print invalid term-put option error to standard error and exit
+void term_put_error_option_invalid(const String option)
 {
-	fprintf(stderr, "term-put: error: Option \"%s\" is not supported\n", option);
+	fprintf(stderr, "term-put: error: \"%s\" is not a valid option\n", option);
 	exit(1);
 }
 
 //  Print incomplete term-put option error to standard error and exit
 void term_put_error_option_incomplete(const String option)
 {
-	fprintf(stderr, "term-put: error: Option \"%s\" requires an argument\n", option);
+	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", option);
 	exit(1);
 }
 
-//  Print unsupported term-put option error to standard error and exit
-void term_put_error_option_short_unsupported(const char option)
+//  Print invalid term-put option error to standard error and exit
+void term_put_error_option_short_invalid(const char option)
 {
-	fprintf(stderr, "term-put: error: Option \"%c\" is not supported\n", option);
+	fprintf(stderr, "term-put: error: \"%c\" is not a valid option\n", option);
 	exit(1);
 }
 
-//  Print unsupported term-put attribute error to standard error and exit
-void term_put_error_attribute_unsupported(const String attribute)
+//  Print invalid term-put attribute error to standard error and exit
+void term_put_error_attribute_invalid(const String attribute)
 {
-	fprintf(stderr, "term-put: error: Attribute \"%s\" is not supported\n", attribute);
+	fprintf(stderr, "term-put: error: \"%s\" is not a valid attribute\n", attribute);
 	exit(1);
 }
 
 //  Print incomplete term-put attribute error to standard error and exit
 void term_put_error_attribute_incomplete(const String attribute)
 {
-	fprintf(stderr, "term-put: error: Attribute \"%s\" requires an argument\n", attribute);
+	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", attribute);
 	exit(1);
 }

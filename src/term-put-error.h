@@ -28,10 +28,10 @@
 //  Include term-put header files
 #include <term-put.h>
 
-void term_put_error_option_unsupported(const String option);
+void term_put_error_option_invalid(const String option);
 void term_put_error_option_incomplete(const String option);
-void term_put_error_option_short_unsupported(const char option);
-void term_put_error_attribute_unsupported(const String attribute);
+void term_put_error_option_short_invalid(const char option);
+void term_put_error_attribute_invalid(const String attribute);
 void term_put_error_attribute_incomplete(const String attribute);
 
 #endif
