@@ -26,37 +26,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//  Print invalid term-put option error to standard error and exit
-void term_put_error_option_invalid(const char* option)
+//  Print unsupported term-put option error to standard error and exit
+void term_put_error_option_unsupported(const char* option)
 {
-	fprintf(stderr, "term-put: error: \"%s\" is not a valid option\n", option);
+	fprintf(stderr, "term-put: error: Option \"%s\" is not supported\n", option);
 	exit(1);
 }
 
 //  Print incomplete term-put option error to standard error and exit
 void term_put_error_option_incomplete(const char* option)
 {
-	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", option);
+	fprintf(stderr, "term-put: error: Option \"%s\" requires an argument\n", option);
 	exit(1);
 }
 
-//  Print invalid term-put option error to standard error and exit
-void term_put_error_option_short_invalid(const char option)
+//  Print unsupported term-put option error to standard error and exit
+void term_put_error_option_short_unsupported(const char option)
 {
-	fprintf(stderr, "term-put: error: \"%c\" is not a valid option\n", option);
+	fprintf(stderr, "term-put: error: Option \"%c\" is not supported\n", option);
 	exit(1);
 }
 
-//  Print invalid term-put attribute error to standard error and exit
-void term_put_error_attribute_invalid(const char* attribute)
+//  Print unsupported term-put attribute error to standard error and exit
+void term_put_error_attribute_unsupported(const char* attribute)
 {
-	fprintf(stderr, "term-put: error: \"%s\" is not a valid attribute\n", attribute);
+	fprintf(stderr, "term-put: error: Attribute \"%s\" is not supported\n", attribute);
 	exit(1);
 }
 
 //  Print incomplete term-put attribute error to standard error and exit
 void term_put_error_attribute_incomplete(const char* attribute)
 {
-	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", attribute);
+	fprintf(stderr, "term-put: error: Attribute \"%s\" requires an argument\n", attribute);
 	exit(1);
 }
