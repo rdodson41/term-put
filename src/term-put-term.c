@@ -25,7 +25,7 @@
 //  Include C standard header files
 #include <errno.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 
 //  Include POSIX standard header files
 #include <unistd.h>
@@ -107,37 +107,37 @@ TermColor term_put_term_color_count_get()
 TermColor term_put_term_color_get(String value) {
 	if(value == NULL)
 		return (TermColor) { 0x00, false };
-	else if(strcasecmp(value, "black") == 0)
+	else if(strcmp(value, "black") == 0)
 		return (TermColor) { 0x00, true };
-	else if(strcasecmp(value, "red") == 0)
+	else if(strcmp(value, "red") == 0)
 		return (TermColor) { 0x01, true };
-	else if(strcasecmp(value, "green") == 0)
+	else if(strcmp(value, "green") == 0)
 		return (TermColor) { 0x02, true };
-	else if(strcasecmp(value, "yellow") == 0)
+	else if(strcmp(value, "yellow") == 0)
 		return (TermColor) { 0x03, true };
-	else if(strcasecmp(value, "blue") == 0)
+	else if(strcmp(value, "blue") == 0)
 		return (TermColor) { 0x04, true };
-	else if(strcasecmp(value, "magenta") == 0)
+	else if(strcmp(value, "magenta") == 0)
 		return (TermColor) { 0x05, true };
-	else if(strcasecmp(value, "cyan") == 0)
+	else if(strcmp(value, "cyan") == 0)
 		return (TermColor) { 0x06, true };
-	else if(strcasecmp(value, "white") == 0)
+	else if(strcmp(value, "white") == 0)
 		return (TermColor) { 0x07, true };
-	else if(strcasecmp(value, "bright-black") == 0)
+	else if(strcmp(value, "bright-black") == 0)
 		return (TermColor) { 0x08, true };
-	else if(strcasecmp(value, "bright-red") == 0)
+	else if(strcmp(value, "bright-red") == 0)
 		return (TermColor) { 0x09, true };
-	else if(strcasecmp(value, "bright-green") == 0)
+	else if(strcmp(value, "bright-green") == 0)
 		return (TermColor) { 0x0A, true };
-	else if(strcasecmp(value, "bright-yellow") == 0)
+	else if(strcmp(value, "bright-yellow") == 0)
 		return (TermColor) { 0x0B, true };
-	else if(strcasecmp(value, "bright-blue") == 0)
+	else if(strcmp(value, "bright-blue") == 0)
 		return (TermColor) { 0x0C, true };
-	else if(strcasecmp(value, "bright-magenta") == 0)
+	else if(strcmp(value, "bright-magenta") == 0)
 		return (TermColor) { 0x0D, true };
-	else if(strcasecmp(value, "bright-cyan") == 0)
+	else if(strcmp(value, "bright-cyan") == 0)
 		return (TermColor) { 0x0E, true };
-	else if(strcasecmp(value, "bright-white") == 0)
+	else if(strcmp(value, "bright-white") == 0)
 		return (TermColor) { 0x0F, true };
 	errno = 0;
 	String value_end;
