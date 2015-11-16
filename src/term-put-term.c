@@ -65,7 +65,7 @@ void term_put_term_set(String value)
 	else if(status == ERR)
 	{
 		if(error == -1)
-			term_put_warning_term_unsupported(value);
+			term_put_warning_term_invalid(value);
 		else if(error == 0)
 			term_put_warning_term_generic(value);
 		else if(error == 1)
