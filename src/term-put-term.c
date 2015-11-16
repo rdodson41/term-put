@@ -24,9 +24,8 @@
 
 //  Include C standard header files
 #include <errno.h>
-#include <limits.h>
 #include <stdlib.h>
-#include <string.h>
+#include <strings.h>
 
 //  Include POSIX standard header files
 #include <unistd.h>
@@ -37,12 +36,14 @@
 
 //  Include term-put header files
 #include <term-put.h>
+#include <term-put-term.h>
+#include <term-put-warning.h>
 
-static char* _term = NULL;
-static LongOptional _term_colors = { 0, false };
+static Term _term = NULL;
+static TermColor _term_color_count = { 0, false };
 
-//  Set terminal
-void term_put_term_set(char* value)
+//  Set terminal type
+void term_put_term_set(String value)
 {
 	if(value == NULL)
 	{
@@ -55,13 +56,13 @@ void term_put_term_set(char* value)
 	if(status == OK)
 	{
 		_term = value;
-		const LongOptional term_colors = { tigetnum("colors"), true };
-		if(term_colors.value == -2)
-			term_put_warning_term_colors_unavailable(value);
-		else if(term_colors.value == -1)
-			term_put_warning_term_colors_unsupported(value);
+		const TermColor term_color_count = { tigetnum("colors"), true };
+		if(term_color_count.value == -2)
+			term_put_warning_term_color_count_unavailable(value);
+		else if(term_color_count.value == -1)
+			term_put_warning_term_color_count_unsupported(value);
 		else
-			_term_colors = term_colors;
+			_term_color_count = term_color_count;
 	}
 	else if(status == ERR)
 	{
@@ -74,13 +75,14 @@ void term_put_term_set(char* value)
 	}
 }
 
-//  Get terminal
-char* term_put_term_get() {
+//  Get terminal type
+Term term_put_term_get()
+{
 	return _term;
 }
 
-//  Set number of terminal colors
-void term_put_term_colors_set(char* value)
+//  Set count of terminal colors
+void term_put_term_color_count_set(String value)
 {
 	if(value == NULL)
 	{
@@ -89,73 +91,62 @@ void term_put_term_colors_set(char* value)
 			return;
 	}
 	errno = 0;
-	char* value_end;
-	const LongOptional term_colors = { strtol(value, &value_end, 0), true };
-	if(errno == EINVAL)
-		term_put_warning_term_colors_invalid(value);
-	else if(errno == ERANGE && term_colors.value == LONG_MAX)
-		term_put_warning_term_colors_overflow(value);
-	else if(errno == ERANGE && term_colors.value == LONG_MIN)
-		term_put_warning_term_colors_underflow(value);
-	else if(value_end[0] != '\0')
-		term_put_warning_term_colors_invalid(value);
+	String value_end;
+	const TermColor term_color_count = { strtol(value, &value_end, 0), true };
+	if(errno == EINVAL || value_end[0] != '\0')
+		term_put_warning_term_color_count_invalid(value);
 	else
-		_term_colors = term_colors;
+		_term_color_count = term_color_count;
 }
 
-//  Get number of terminal colors
-LongOptional term_put_term_colors_get() {
-	return _term_colors;
+//  Get count of terminal colors
+TermColor term_put_term_color_count_get()
+{
+	return _term_color_count;
 }
 
 //  Get terminal color
-LongOptional term_put_term_color_get(char* value) {
+TermColor term_put_term_color_get(String value) {
 	if(value == NULL)
-		return (LongOptional) { 0x00, false };
-	else if(strcmp(value, "black") == 0)
-		return (LongOptional) { 0x00, true };
-	else if(strcmp(value, "red") == 0)
-		return (LongOptional) { 0x01, true };
-	else if(strcmp(value, "green") == 0)
-		return (LongOptional) { 0x02, true };
-	else if(strcmp(value, "yellow") == 0)
-		return (LongOptional) { 0x03, true };
-	else if(strcmp(value, "blue") == 0)
-		return (LongOptional) { 0x04, true };
-	else if(strcmp(value, "magenta") == 0)
-		return (LongOptional) { 0x05, true };
-	else if(strcmp(value, "cyan") == 0)
-		return (LongOptional) { 0x06, true };
-	else if(strcmp(value, "white") == 0)
-		return (LongOptional) { 0x07, true };
-	else if(strcmp(value, "bright-black") == 0)
-		return (LongOptional) { 0x08, true };
-	else if(strcmp(value, "bright-red") == 0)
-		return (LongOptional) { 0x09, true };
-	else if(strcmp(value, "bright-green") == 0)
-		return (LongOptional) { 0x0A, true };
-	else if(strcmp(value, "bright-yellow") == 0)
-		return (LongOptional) { 0x0B, true };
-	else if(strcmp(value, "bright-blue") == 0)
-		return (LongOptional) { 0x0C, true };
-	else if(strcmp(value, "bright-magenta") == 0)
-		return (LongOptional) { 0x0D, true };
-	else if(strcmp(value, "bright-cyan") == 0)
-		return (LongOptional) { 0x0E, true };
-	else if(strcmp(value, "bright-white") == 0)
-		return (LongOptional) { 0x0F, true };
+		return (TermColor) { 0x00, false };
+	else if(strcasecmp(value, "black") == 0)
+		return (TermColor) { 0x00, true };
+	else if(strcasecmp(value, "red") == 0)
+		return (TermColor) { 0x01, true };
+	else if(strcasecmp(value, "green") == 0)
+		return (TermColor) { 0x02, true };
+	else if(strcasecmp(value, "yellow") == 0)
+		return (TermColor) { 0x03, true };
+	else if(strcasecmp(value, "blue") == 0)
+		return (TermColor) { 0x04, true };
+	else if(strcasecmp(value, "magenta") == 0)
+		return (TermColor) { 0x05, true };
+	else if(strcasecmp(value, "cyan") == 0)
+		return (TermColor) { 0x06, true };
+	else if(strcasecmp(value, "white") == 0)
+		return (TermColor) { 0x07, true };
+	else if(strcasecmp(value, "bright-black") == 0)
+		return (TermColor) { 0x08, true };
+	else if(strcasecmp(value, "bright-red") == 0)
+		return (TermColor) { 0x09, true };
+	else if(strcasecmp(value, "bright-green") == 0)
+		return (TermColor) { 0x0A, true };
+	else if(strcasecmp(value, "bright-yellow") == 0)
+		return (TermColor) { 0x0B, true };
+	else if(strcasecmp(value, "bright-blue") == 0)
+		return (TermColor) { 0x0C, true };
+	else if(strcasecmp(value, "bright-magenta") == 0)
+		return (TermColor) { 0x0D, true };
+	else if(strcasecmp(value, "bright-cyan") == 0)
+		return (TermColor) { 0x0E, true };
+	else if(strcasecmp(value, "bright-white") == 0)
+		return (TermColor) { 0x0F, true };
 	errno = 0;
-	char* value_end;
-	const LongOptional term_color = { strtol(value, &value_end, 0), true };
-	if(errno == EINVAL)
-		term_put_warning_term_color_invalid(value);
-	else if(errno == ERANGE && term_color.value == LONG_MAX)
-		term_put_warning_term_color_overflow(value);
-	else if(errno == ERANGE && term_color.value == LONG_MIN)
-		term_put_warning_term_color_underflow(value);
-	else if(value_end[0] != '\0')
+	String value_end;
+	const TermColor term_color = { strtol(value, &value_end, 0), true };
+	if(errno == EINVAL || value_end[0] != '\0')
 		term_put_warning_term_color_invalid(value);
 	else
 		return term_color;
-	return (LongOptional) { 0x00, false };
+	return (TermColor) { 0x00, false };
 }
