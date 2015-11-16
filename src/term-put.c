@@ -89,20 +89,14 @@ void term_put_foreground(String value) {
 	if(!term_color_count.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value)
+	if(!term_color.has_value || term_color_count.value <= term_color.value )
 		return;
-	if(term_color_count.value > 16 || term_put_term_color_extend)
-	{
-		if(0 <= term_color.value && term_color.value < term_color_count.value)
-			fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
-	}
-	else
-	{
-		if(0 <= term_color.value && term_color.value < 8)
-			fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
-		else if(8 <= term_color.value && term_color.value < 16)
-			fprintf(stdout, "\x1b[%ldm", 90 + term_color.value);
-	}
+	else if(0x10 <= term_color.value || term_put_term_color_extend)
+		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
+	else if(0x08 <= term_color.value && term_color.value < 0x10)
+		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value);
+	else if(0x00 <= term_color.value && term_color.value < 0x08)
+		fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
 }
 
 //  Set background terminal text color
@@ -111,20 +105,14 @@ void term_put_background(String value) {
 	if(!term_color_count.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value)
+	if(!term_color.has_value || term_color_count.value <= term_color.value )
 		return;
-	if(term_color_count.value > 16 || term_put_term_color_extend)
-	{
-		if(0 <= term_color.value && term_color.value < term_color_count.value)
-			fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
-	}
-	else
-	{
-		if(0 <= term_color.value && term_color.value < 8)
-			fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
-		else if(8 <= term_color.value && term_color.value < 16)
-			fprintf(stdout, "\x1b[%ldm", 100 + term_color.value);
-	}
+	else if(0x10 <= term_color.value || term_put_term_color_extend)
+		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
+	else if(0x08 <= term_color.value && term_color.value < 0x10)
+		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value);
+	else if(0x00 <= term_color.value && term_color.value < 0x08)
+		fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
 }
 
 //  Define macro variables to help process command line arguments
@@ -146,53 +134,53 @@ int main(int argc, String argv[])
 
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
-				if(strcasecmp(OPTION, "help") == 0)
+				if(strcmp(OPTION, "help") == 0)
 					term_put_usage();
-				else if(strcasecmp(OPTION, "usage") == 0)
+				else if(strcmp(OPTION, "usage") == 0)
 					term_put_usage();
-				else if(strcasecmp(OPTION, "version") == 0)
+				else if(strcmp(OPTION, "version") == 0)
 					term_put_version();
-				else if(strcasecmp(OPTION, "term") == 0)
+				else if(strcmp(OPTION, "term") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_set(VALUE);
-				else if(strcasecmp(OPTION, "colors") == 0)
+				else if(strcmp(OPTION, "colors") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_color_count_set(VALUE);
-				else if(strcasecmp(OPTION, "extend") == 0)
+				else if(strcmp(OPTION, "extend") == 0)
 					term_put_term_color_extend = true;
 				else
-					term_put_error_option_unsupported(OPTION);
+					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					if(*ARGUMENT == 'x')
 						term_put_term_color_extend = true;
 					else
-						term_put_error_option_short_unsupported(*ARGUMENT);
-		else if(strcasecmp(ARGUMENT, "term") == 0)
+						term_put_error_option_short_invalid(*ARGUMENT);
+		else if(strcmp(ARGUMENT, "term") == 0)
 			term_put_term();
-		else if(strcasecmp(ARGUMENT, "colors") == 0)
+		else if(strcmp(ARGUMENT, "colors") == 0)
 			term_put_term_color_count();
-		else if(strcasecmp(ARGUMENT, "normal") == 0)
+		else if(strcmp(ARGUMENT, "normal") == 0)
 			term_put_normal();
-		else if(strcasecmp(ARGUMENT, "bold") == 0)
+		else if(strcmp(ARGUMENT, "bold") == 0)
 			term_put_bold();
-		else if(strcasecmp(ARGUMENT, "underline") == 0)
+		else if(strcmp(ARGUMENT, "underline") == 0)
 			term_put_underline();
-		else if(strcasecmp(ARGUMENT, "foreground") == 0)
+		else if(strcmp(ARGUMENT, "foreground") == 0)
 			if(separator == NULL)
 				term_put_error_attribute_incomplete(ARGUMENT);
 			else
 				term_put_foreground(VALUE);
-		else if(strcasecmp(ARGUMENT, "background") == 0)
+		else if(strcmp(ARGUMENT, "background") == 0)
 			if(separator == NULL)
 				term_put_error_attribute_incomplete(ARGUMENT);
 			else
 				term_put_background(VALUE);
 		else
-			term_put_error_attribute_unsupported(ARGUMENT);
+			term_put_error_attribute_invalid(ARGUMENT);
 	}
 }
