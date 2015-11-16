@@ -23,71 +23,50 @@
 //
 
 //  Include C standard header files
-#include <stdbool.h>
 #include <stdio.h>
 
-//  Print unsupported term-put terminal warning to standard error
-void term_put_warning_term_unsupported(const char* term)
+//  Include term-put header files
+#include <term-put.h>
+#include <term-put-warning.h>
+
+//  Print unsupported term-put terminal type warning to standard error
+void term_put_warning_term_unsupported(const String term)
 {
-	fprintf(stderr, "term-put: warning: Terminal \"%s\" is not supported\n", term);
+	fprintf(stderr, "term-put: warning: Terminal type \"%s\" is not supported\n", term);
 }
 
-//  Print generic term-put terminal warning to standard error
-void term_put_warning_term_generic(const char* term)
+//  Print generic term-put terminal type warning to standard error
+void term_put_warning_term_generic(const String term)
 {
-	fprintf(stderr, "term-put: warning: Terminal \"%s\" is a generic terminal\n", term);
+	fprintf(stderr, "term-put: warning: Terminal type \"%s\" is a generic terminal type\n", term);
 }
 
-//  Print hard-copy term-put terminal warning to standard error
-void term_put_warning_term_hard_copy(const char* term)
+//  Print hard-copy term-put terminal type warning to standard error
+void term_put_warning_term_hard_copy(const String term)
 {
-	fprintf(stderr, "term-put: warning: Terminal \"%s\" is a hard-copy terminal\n", term);
+	fprintf(stderr, "term-put: warning: Terminal type \"%s\" is a hard-copy terminal type\n", term);
 }
 
-//  Print unavailable term-put terminal colors warning to standard error
-void term_put_warning_term_colors_unavailable(const char* term)
+//  Print unavailable count of term-put terminal type colors warning to standard error
+void term_put_warning_term_color_count_unavailable(const String term)
 {
-	fprintf(stderr, "term-put: warning: Terminal \"%s\" colors are not available\n", term);
+	fprintf(stderr, "term-put: warning: Count of terminal type \"%s\" colors is not available\n", term);
 }
 
-//  Print unsupported term-put terminal colors warning to standard error
-void term_put_warning_term_colors_unsupported(const char* term)
+//  Print unsupported count of term-put terminal type colors warning to standard error
+void term_put_warning_term_color_count_unsupported(const String term)
 {
-	fprintf(stderr, "term-put: warning: Terminal \"%s\" colors are not supported\n", term);
+	fprintf(stderr, "term-put: warning: Count of terminal type \"%s\" colors is not supported\n", term);
 }
 
-//  Print invalid number of term-put terminal colors warning to standard error
-void term_put_warning_term_colors_invalid(const char* term_colors)
+//  Print invalid count of term-put terminal colors warning to standard error
+void term_put_warning_term_color_count_invalid(const String term_color_count)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" is not a valid number of terminal colors\n", term_colors);
-}
-
-// Print overflow number of term-put terminal colors warning to standard error
-void term_put_warning_term_colors_overflow(const char* term_colors)
-{
-	fprintf(stderr, "term-put: warning: \"%s\" is greater than the maximum number of terminal colors\n", term_colors);
-}
-
-// Print underflow number of term-put terminal colors warning to standard error
-void term_put_warning_term_colors_underflow(const char* term_colors)
-{
-	fprintf(stderr, "term-put: warning: \"%s\" is less than the minimum number of terminal colors\n", term_colors);
+	fprintf(stderr, "term-put: warning: \"%s\" is not a valid count of terminal colors\n", term_color_count);
 }
 
 //  Print invalid term-put terminal color warning to standard error
-void term_put_warning_term_color_invalid(const char* term_color)
+void term_put_warning_term_color_invalid(const String term_color)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" is not a valid terminal color\n", term_color);
-}
-
-// Print overflow term-put terminal color warning to standard error
-void term_put_warning_term_color_overflow(const char* term_color)
-{
-	fprintf(stderr, "term-put: warning: \"%s\" is greater than the maximum terminal color\n", term_color);
-}
-
-// Print underflow term-put terminal color warning to standard error
-void term_put_warning_term_color_underflow(const char* term_color)
-{
-	fprintf(stderr, "term-put: warning: \"%s\" is less than the minimum terminal color\n", term_color);
 }
