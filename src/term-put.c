@@ -23,14 +23,17 @@
 //
 
 //  Include C standard header files
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <strings.h>
 
 //  Include term-put header files
 #include <term-put.h>
 #include <term-put-term.h>
 #include <term-put-error.h>
+
+static bool term_put_term_color_extend = false;
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
@@ -81,14 +84,14 @@ void term_put_underline()
 }
 
 //  Set foreground terminal text color
-void term_put_foreground(char* value) {
+void term_put_foreground(String value) {
 	const TermColor term_color_count = term_put_term_color_count_get();
 	if(!term_color_count.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value)
 		return;
-	if(term_color_count.value > 16)
+	if(term_color_count.value > 16 || term_put_term_color_extend)
 	{
 		if(0 <= term_color.value && term_color.value < term_color_count.value)
 			fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
@@ -103,14 +106,14 @@ void term_put_foreground(char* value) {
 }
 
 //  Set background terminal text color
-void term_put_background(char* value) {
+void term_put_background(String value) {
 	const TermColor term_color_count = term_put_term_color_count_get();
 	if(!term_color_count.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value)
 		return;
-	if(term_color_count.value > 16)
+	if(term_color_count.value > 16 || term_put_term_color_extend)
 	{
 		if(0 <= term_color.value && term_color.value < term_color_count.value)
 			fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
@@ -124,57 +127,67 @@ void term_put_background(char* value) {
 	}
 }
 
+//  Define macro variables to help process command line arguments
+#define ARGUMENT (*argv)
+#define OPTION (ARGUMENT + 2)
+#define VALUE (separator + 1)
+
 //  Process command line arguments
-int main(int argc, char* argv[])
+int main(int argc, String argv[])
 {
 	term_put_term_set(NULL);
 	term_put_term_color_count_set(NULL);
 
 	for(argv++; --argc > 0; argv++)
 	{
-		char* separator = strchr(ARGUMENT, '=');
+		String separator = strchr(ARGUMENT, '=');
 		if(separator != NULL)
 			*separator = '\0';
 
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
-				if(strcmp(OPTION, "help") == 0)
+				if(strcasecmp(OPTION, "help") == 0)
 					term_put_usage();
-				else if(strcmp(OPTION, "usage") == 0)
+				else if(strcasecmp(OPTION, "usage") == 0)
 					term_put_usage();
-				else if(strcmp(OPTION, "version") == 0)
+				else if(strcasecmp(OPTION, "version") == 0)
 					term_put_version();
-				else if(strcmp(OPTION, "term") == 0)
+				else if(strcasecmp(OPTION, "term") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_set(VALUE);
-				else if(strcmp(OPTION, "colors") == 0)
+				else if(strcasecmp(OPTION, "colors") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_color_count_set(VALUE);
+				else if(strcasecmp(OPTION, "extend") == 0)
+					term_put_term_color_extend = true;
 				else
 					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
-					term_put_error_option_short_invalid(*ARGUMENT);
-		else if(strcmp(ARGUMENT, "term") == 0)
+					if(*ARGUMENT == 'x')
+						term_put_term_color_extend = true;
+					else
+						term_put_error_option_short_invalid(*ARGUMENT);
+		else if(strcasecmp(ARGUMENT, "term") == 0)
 			term_put_term();
-		else if(strcmp(ARGUMENT, "colors") == 0)
+		else if(strcasecmp(ARGUMENT, "colors") == 0)
 			term_put_term_color_count();
-		else if(strcmp(ARGUMENT, "normal") == 0)
+		else if(strcasecmp(ARGUMENT, "normal") == 0)
 			term_put_normal();
-		else if(strcmp(ARGUMENT, "bold") == 0)
+		else if(strcasecmp(ARGUMENT, "bold") == 0)
 			term_put_bold();
-		else if(strcmp(ARGUMENT, "underline") == 0)
+		else if(strcasecmp(ARGUMENT, "underline") == 0)
 			term_put_underline();
-		else if(strcmp(ARGUMENT, "foreground") == 0)
+		else if(strcasecmp(ARGUMENT, "foreground") == 0)
 			if(separator == NULL)
 				term_put_error_attribute_incomplete(ARGUMENT);
 			else
 				term_put_foreground(VALUE);
-		else if(strcmp(ARGUMENT, "background") == 0)
+		else if(strcasecmp(ARGUMENT, "background") == 0)
 			if(separator == NULL)
 				term_put_error_attribute_incomplete(ARGUMENT);
 			else

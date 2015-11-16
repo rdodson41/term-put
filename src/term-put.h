@@ -25,10 +25,7 @@
 #ifndef TERM_PUT
 #define TERM_PUT
 
-//  Define macro variables to help process command line arguments
-#define ARGUMENT (*argv)
-#define OPTION (ARGUMENT + 2)
-#define VALUE (separator + 1)
+typedef char* String;
 
 void term_put_usage();
 void term_put_version();
@@ -40,7 +37,7 @@ void term_put_normal();
 void term_put_bold();
 void term_put_underline();
 
-void term_put_foreground(char* value);
-void term_put_background(char* value);
+void term_put_foreground(String value);
+void term_put_background(String value);
 
 #endif
