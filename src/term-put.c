@@ -165,13 +165,13 @@ int main(int argc, String argv[])
 				else if(strcasecmp(OPTION, "extend") == 0)
 					term_put_term_color_extend = true;
 				else
-					term_put_error_option_invalid(OPTION);
+					term_put_error_option_unsupported(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					if(*ARGUMENT == 'x')
 						term_put_term_color_extend = true;
 					else
-						term_put_error_option_short_invalid(*ARGUMENT);
+						term_put_error_option_short_unsupported(*ARGUMENT);
 		else if(strcasecmp(ARGUMENT, "term") == 0)
 			term_put_term();
 		else if(strcasecmp(ARGUMENT, "colors") == 0)
@@ -193,6 +193,6 @@ int main(int argc, String argv[])
 			else
 				term_put_background(VALUE);
 		else
-			term_put_error_attribute_invalid(ARGUMENT);
+			term_put_error_attribute_unsupported(ARGUMENT);
 	}
 }
