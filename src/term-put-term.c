@@ -57,9 +57,7 @@ void term_put_term_set(String value)
 	{
 		_term = value;
 		const TermColor term_color_count = { tigetnum("colors"), true };
-		if(term_color_count.value == -2)
-			term_put_warning_term_color_count_unavailable(value);
-		else if(term_color_count.value == -1)
+		if(term_color_count.value < 0)
 			term_put_warning_term_color_count_unsupported(value);
 		else
 			_term_color_count = term_color_count;

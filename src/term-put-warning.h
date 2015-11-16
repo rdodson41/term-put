@@ -31,7 +31,6 @@
 void term_put_warning_term_unsupported(const String term);
 void term_put_warning_term_generic(const String term);
 void term_put_warning_term_hard_copy(const String term);
-void term_put_warning_term_color_count_unavailable(const String term);
 void term_put_warning_term_color_count_unsupported(const String term);
 void term_put_warning_term_color_count_invalid(const String term_color_count);
 void term_put_warning_term_color_invalid(const String term_color);
