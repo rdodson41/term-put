@@ -26,7 +26,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 
 //  Include term-put header files
 #include <term-put.h>
