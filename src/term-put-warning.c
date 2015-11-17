@@ -47,7 +47,7 @@ void term_put_warning_term_hard_copy(const String term)
 	fprintf(stderr, "term-put: warning: \"%s\" is a hard-copy terminal type\n", term);
 }
 
-//  Print unsupported term-put terminal colors warning to standard error
+//  Print unsupported count of term-put terminal colors warning to standard error
 void term_put_warning_term_color_count_unsupported(const String term)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" does not support terminal colors\n", term);
