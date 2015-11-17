@@ -33,7 +33,24 @@
 #include <term-put-term.h>
 #include <term-put-error.h>
 
-static bool term_color_extend = false;
+static bool _verbose = false;
+static bool _quiet = false;
+static bool _term_color_extend = false;
+
+//  Get term-put verbose status
+bool term_put_verbose_get() {
+	return _verbose;
+}
+
+//  Get term-put quiet status
+bool term_put_quiet_get() {
+	return _quiet;
+}
+
+//  Get term-put terminal color extension status
+bool term_put_term_color_extend_get() {
+	return _term_color_extend;
+}
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
@@ -91,7 +108,7 @@ void term_put_foreground(String value) {
 	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value || term_color_count.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value || term_color_extend)
+	else if(0x10 <= term_color.value || _term_color_extend)
 		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
@@ -107,7 +124,7 @@ void term_put_background(String value) {
 	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value || term_color_count.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value || term_color_extend)
+	else if(0x10 <= term_color.value || _term_color_extend)
 		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
@@ -140,6 +157,10 @@ int main(int argc, String argv[])
 					term_put_usage();
 				else if(strcmp(OPTION, "version") == 0)
 					term_put_version();
+				else if(strcmp(OPTION, "verbose") == 0)
+					_verbose = true;
+				else if(strcmp(OPTION, "quiet") == 0)
+					_quiet = true;
 				else if(strcmp(OPTION, "term") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
@@ -151,13 +172,17 @@ int main(int argc, String argv[])
 					else
 						term_put_term_color_count_set(VALUE);
 				else if(strcmp(OPTION, "extend") == 0)
-					term_color_extend = true;
+					_term_color_extend = true;
 				else
 					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
-					if(*ARGUMENT == 'x')
-						term_color_extend = true;
+					if(*ARGUMENT == 'v')
+						_verbose = true;
+					else if(*ARGUMENT == 'q')
+						_quiet = true;
+					else if(*ARGUMENT == 'x')
+						_term_color_extend = true;
 					else
 						term_put_error_option_short_invalid(*ARGUMENT);
 		else if(strcmp(ARGUMENT, "term") == 0)

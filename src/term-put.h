@@ -25,7 +25,14 @@
 #ifndef TERM_PUT
 #define TERM_PUT
 
+//  Include C standard header files
+#include <stdbool.h>
+
 typedef char* String;
+
+bool term_put_verbose_get();
+bool term_put_quiet_get();
+bool term_put_term_color_extend_get();
 
 void term_put_usage();
 void term_put_version();
