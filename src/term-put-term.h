@@ -44,8 +44,10 @@ typedef LongOptional TermColor;
 
 void term_put_term_set(String value);
 Term term_put_term_get();
+
 void term_put_term_color_count_set(String value);
 TermColor term_put_term_color_count_get();
+
 TermColor term_put_term_color_get(String value);
 
 #endif
