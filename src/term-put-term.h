@@ -1,7 +1,7 @@
 //
-//  Name:     rdodson41/term-put/src/term-put.h
+//  Name:     rdodson41/term-put/src/term-put-term.h
 //  Author:   Richard E. Dodson <richard.elias.dodson@gmail.com>
-//  Created:  Thu Nov 05 21:55:50 UTC 2015
+//  Created:  Mon Nov 16 15:50:21 UTC 2015
 //  License:  GNU General Public License, Version 3, 29 June 2007
 //
 //  Copyright (C) 2015 Richard E. Dodson <richard.elias.dodson@gmail.com>
@@ -22,22 +22,32 @@
 //  along with term-put. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef TERM_PUT
-#define TERM_PUT
+#ifndef TERM_PUT_TERM
+#define TERM_PUT_TERM
 
-typedef char* String;
+//  Include C standard header files
+#include <stdbool.h>
 
-void term_put_usage();
-void term_put_version();
+//  Include term-put header files
+#include <term-put.h>
 
-void term_put_term();
-void term_put_term_color_count();
+typedef String Term;
 
-void term_put_normal();
-void term_put_bold();
-void term_put_underline();
+typedef struct
+{
+	long value;
+	bool has_value;
+}
+LongOptional;
 
-void term_put_foreground(String value);
-void term_put_background(String value);
+typedef LongOptional TermColor;
+
+void term_put_term_set(String value);
+Term term_put_term_get();
+
+void term_put_term_color_count_set(String value);
+TermColor term_put_term_color_count_get();
+
+TermColor term_put_term_color_get(String value);
 
 #endif

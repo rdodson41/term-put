@@ -1,7 +1,7 @@
 //
-//  Name:     rdodson41/term-put/src/term-put.h
+//  Name:     rdodson41/term-put/src/term-put-error.h
 //  Author:   Richard E. Dodson <richard.elias.dodson@gmail.com>
-//  Created:  Thu Nov 05 21:55:50 UTC 2015
+//  Created:  Mon Nov 16 20:48:24 UTC 2015
 //  License:  GNU General Public License, Version 3, 29 June 2007
 //
 //  Copyright (C) 2015 Richard E. Dodson <richard.elias.dodson@gmail.com>
@@ -22,22 +22,16 @@
 //  along with term-put. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef TERM_PUT
-#define TERM_PUT
+#ifndef TERM_PUT_ERROR
+#define TERM_PUT_ERROR
 
-typedef char* String;
+//  Include term-put header files
+#include <term-put.h>
 
-void term_put_usage();
-void term_put_version();
-
-void term_put_term();
-void term_put_term_color_count();
-
-void term_put_normal();
-void term_put_bold();
-void term_put_underline();
-
-void term_put_foreground(String value);
-void term_put_background(String value);
+void term_put_error_option_invalid(const String option);
+void term_put_error_option_incomplete(const String option);
+void term_put_error_option_short_invalid(const char option);
+void term_put_error_attribute_invalid(const String attribute);
+void term_put_error_attribute_incomplete(const String attribute);
 
 #endif

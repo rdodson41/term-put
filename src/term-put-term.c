@@ -24,8 +24,8 @@
 
 //  Include C standard header files
 #include <errno.h>
-#include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 
 //  Include POSIX standard header files
 #include <unistd.h>
@@ -36,78 +36,113 @@
 
 //  Include term-put header files
 #include <term-put.h>
+#include <term-put-term.h>
+#include <term-put-warning.h>
 
-typedef struct
+static Term _term = NULL;
+static TermColor _term_color_count = { 0, false };
+
+//  Set term-put terminal type
+void term_put_term_set(String value)
 {
-	bool null;
-	long value;
-}
-OptionalLong;
-
-static OptionalLong _term_colors = { true, 0 };
-
-//  Set terminal type
-void term_put_term_set(char* term)
-{
-	const bool term_env = term == NULL;
-	if(term_env)
+	if(value == NULL)
 	{
-		term = getenv("TERM");
-		if(term == NULL)
+		value = getenv("TERM");
+		if(value == NULL)
 			return;
 	}
 	int error;
-	const int status = setupterm(term, STDOUT_FILENO, &error);
+	const int status = setupterm(value, STDOUT_FILENO, &error);
 	if(status == OK)
 	{
-		const long term_colors_value = tigetnum("colors");
-		if(term_colors_value == -2)
-			term_put_warning_term_colors_unavailable(term_env, term);
-		else if(term_colors_value == -1)
-			term_put_warning_term_colors_unsupported(term_env, term);
-		else
-			_term_colors = (OptionalLong) { false, term_colors_value };
+		_term = value;
+		_term_color_count = (TermColor) { tigetnum("colors"), true };
+		if(_term_color_count.value < 0)
+			term_put_warning_term_color_count_unsupported(value);
 	}
 	else if(status == ERR)
 	{
 		if(error == -1)
-			term_put_warning_term_unsupported(term_env, term);
+			term_put_warning_term_invalid(value);
 		else if(error == 0)
-			term_put_warning_term_generic(term_env, term);
+			term_put_warning_term_generic(value);
 		else if(error == 1)
-			term_put_warning_term_hard_copy(term_env, term);
+			term_put_warning_term_hard_copy(value);
 	}
 }
 
-//  Set number of terminal colors
-void term_put_term_colors_set(char* term_colors)
+//  Get term-put terminal type
+Term term_put_term_get()
 {
-	const bool term_colors_env = term_colors == NULL;
-	if(term_colors_env)
+	return _term;
+}
+
+//  Set count of term-put terminal colors
+void term_put_term_color_count_set(String value)
+{
+	if(value == NULL)
 	{
-		term_colors = getenv("TERM_COLORS");
-		if(term_colors == NULL)
+		value = getenv("TERM_COLORS");
+		if(value == NULL)
 			return;
 	}
 	errno = 0;
-	char* term_colors_end;
-	const long term_colors_value = strtol(term_colors, &term_colors_end, 0);
-	if(errno == EINVAL)
-		term_put_warning_term_colors_conversion_failure(term_colors_env, term_colors);
-	else if(errno == ERANGE && term_colors_value == LONG_MAX)
-		term_put_warning_term_colors_overflow(term_colors_env, term_colors);
-	else if(errno == ERANGE && term_colors_value == LONG_MIN)
-		term_put_warning_term_colors_underflow(term_colors_env, term_colors);
-	else if(term_colors_end[0] != '\0')
-		term_put_warning_term_colors_conversion_failure(term_colors_env, term_colors);
+	String value_end;
+	const TermColor term_color_count = { strtol(value, &value_end, 0), true };
+	if(errno == EINVAL || value_end[0] != '\0')
+		term_put_warning_term_color_count_invalid(value);
 	else
-		_term_colors = (OptionalLong) { false, term_colors_value };
+		_term_color_count = term_color_count;
 }
 
-//  Print number of terminal colors to standard output
-void term_put_term_colors() {
-	if(_term_colors.null)
-		term_put_warning_term_colors_undefined();
+//  Get count of term-put terminal colors
+TermColor term_put_term_color_count_get()
+{
+	return _term_color_count;
+}
+
+//  Get term-put terminal color
+TermColor term_put_term_color_get(String value) {
+	if(value == NULL)
+		return (TermColor) { 0x00, false };
+	else if(strcmp(value, "black") == 0)
+		return (TermColor) { 0x00, true };
+	else if(strcmp(value, "red") == 0)
+		return (TermColor) { 0x01, true };
+	else if(strcmp(value, "green") == 0)
+		return (TermColor) { 0x02, true };
+	else if(strcmp(value, "yellow") == 0)
+		return (TermColor) { 0x03, true };
+	else if(strcmp(value, "blue") == 0)
+		return (TermColor) { 0x04, true };
+	else if(strcmp(value, "magenta") == 0)
+		return (TermColor) { 0x05, true };
+	else if(strcmp(value, "cyan") == 0)
+		return (TermColor) { 0x06, true };
+	else if(strcmp(value, "white") == 0)
+		return (TermColor) { 0x07, true };
+	else if(strcmp(value, "bright-black") == 0)
+		return (TermColor) { 0x08, true };
+	else if(strcmp(value, "bright-red") == 0)
+		return (TermColor) { 0x09, true };
+	else if(strcmp(value, "bright-green") == 0)
+		return (TermColor) { 0x0A, true };
+	else if(strcmp(value, "bright-yellow") == 0)
+		return (TermColor) { 0x0B, true };
+	else if(strcmp(value, "bright-blue") == 0)
+		return (TermColor) { 0x0C, true };
+	else if(strcmp(value, "bright-magenta") == 0)
+		return (TermColor) { 0x0D, true };
+	else if(strcmp(value, "bright-cyan") == 0)
+		return (TermColor) { 0x0E, true };
+	else if(strcmp(value, "bright-white") == 0)
+		return (TermColor) { 0x0F, true };
+	errno = 0;
+	String value_end;
+	const TermColor term_color = { strtol(value, &value_end, 0), true };
+	if(errno == EINVAL || value_end[0] != '\0')
+		term_put_warning_term_color_invalid(value);
 	else
-		fprintf(stdout, "%ld\n", _term_colors.value);
+		return term_color;
+	return (TermColor) { 0x00, false };
 }

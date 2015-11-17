@@ -1,7 +1,7 @@
 //
-//  Name:     rdodson41/term-put/src/term-put.h
+//  Name:     rdodson41/term-put/src/term-put-warning.h
 //  Author:   Richard E. Dodson <richard.elias.dodson@gmail.com>
-//  Created:  Thu Nov 05 21:55:50 UTC 2015
+//  Created:  Mon Nov 16 15:48:42 UTC 2015
 //  License:  GNU General Public License, Version 3, 29 June 2007
 //
 //  Copyright (C) 2015 Richard E. Dodson <richard.elias.dodson@gmail.com>
@@ -22,22 +22,17 @@
 //  along with term-put. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef TERM_PUT
-#define TERM_PUT
+#ifndef TERM_PUT_WARNING
+#define TERM_PUT_WARNING
 
-typedef char* String;
+//  Include term-put header files
+#include <term-put.h>
 
-void term_put_usage();
-void term_put_version();
-
-void term_put_term();
-void term_put_term_color_count();
-
-void term_put_normal();
-void term_put_bold();
-void term_put_underline();
-
-void term_put_foreground(String value);
-void term_put_background(String value);
+void term_put_warning_term_invalid(const String term);
+void term_put_warning_term_generic(const String term);
+void term_put_warning_term_hard_copy(const String term);
+void term_put_warning_term_color_count_unsupported(const String term);
+void term_put_warning_term_color_count_invalid(const String term_color_count);
+void term_put_warning_term_color_invalid(const String term_color);
 
 #endif

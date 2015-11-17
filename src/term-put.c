@@ -23,109 +23,163 @@
 //
 
 //  Include C standard header files
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 //  Include term-put header files
 #include <term-put.h>
+#include <term-put-term.h>
+#include <term-put-error.h>
 
-//  Define macro variables to process command line arguments
-#define ARGUMENT (*argv)
-#define OPTION (ARGUMENT + 2)
-#define VALUE (separator == NULL ? NULL : separator + 1)
-
-//  Define STRNCMP to compare a constant string to an argument
-#define STRNCMP(ARGUMENT, STRING) strncmp(ARGUMENT, STRING, sizeof(STRING) - sizeof(char))
-
-//  Define FWRITE to write a constant string to a file
-#define FWRITE(FILE, STRING) fwrite(STRING, sizeof(char), sizeof(STRING) - sizeof(char), FILE)
+static bool term_put_term_color_extend = false;
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
 {
-	FWRITE(stderr,
-		"term-put: usage: term-put [<option>|<attribute>[=<value>]]\n"
-		"\n"
-		"        --help               print term-put help\n"
-		"        --version            print term-put version\n"
-		"        --term=<term>        set terminal type to <term>\n"
-		"        --colors=<colors>    set number of terminal colors to <colors>\n"
-		"\n"
-	);
+	fprintf(stderr, "term-put: usage: term-put [<option>|<attribute>[=<value>]] ...\n");
 	exit(1);
 }
 
 //  Print term-put version to standard error and exit
 void term_put_version()
 {
-	FWRITE(stderr, "term-put: version: 0.0.0\n");
+	fprintf(stderr, "term-put: version: 0.0.0\n");
 	exit(1);
 }
 
-//  Disable terminal output attributes
+//  Print term-put terminal type to standard output
+void term_put_term()
+{
+	const Term term = term_put_term_get();
+	if(term != NULL)
+		fprintf(stdout, "%s\n", term);
+}
+
+//  Print count of term-put terminal colors to standard output
+void term_put_term_color_count()
+{
+	const TermColor term_color_count = term_put_term_color_count_get();
+	if(term_color_count.has_value)
+		fprintf(stdout, "%ld\n", term_color_count.value);
+}
+
+//  Disable terminal text attributes
 void term_put_normal()
 {
-	FWRITE(stdout, "\x1b[0m");
+	fprintf(stdout, "\x1b[0m");
 }
 
-//  Enable bold terminal output
+//  Enable bold terminal text
 void term_put_bold()
 {
-	FWRITE(stdout, "\x1b[1m");
+	fprintf(stdout, "\x1b[1m");
 }
 
-//  Enable underlined terminal output
+//  Enable underlined terminal text
 void term_put_underline()
 {
-	FWRITE(stdout, "\x1b[4m");
+	fprintf(stdout, "\x1b[4m");
 }
 
+//  Set foreground terminal text color
+void term_put_foreground(String value) {
+	const TermColor term_color_count = term_put_term_color_count_get();
+	if(!term_color_count.has_value)
+		return;
+	const TermColor term_color = term_put_term_color_get(value);
+	if(!term_color.has_value || term_color_count.value <= term_color.value )
+		return;
+	else if(0x10 <= term_color.value || term_put_term_color_extend)
+		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
+	else if(0x08 <= term_color.value && term_color.value < 0x10)
+		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
+	else if(0x00 <= term_color.value && term_color.value < 0x08)
+		fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
+}
+
+//  Set background terminal text color
+void term_put_background(String value) {
+	const TermColor term_color_count = term_put_term_color_count_get();
+	if(!term_color_count.has_value)
+		return;
+	const TermColor term_color = term_put_term_color_get(value);
+	if(!term_color.has_value || term_color_count.value <= term_color.value )
+		return;
+	else if(0x10 <= term_color.value || term_put_term_color_extend)
+		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
+	else if(0x08 <= term_color.value && term_color.value < 0x10)
+		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
+	else if(0x00 <= term_color.value && term_color.value < 0x08)
+		fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
+}
+
+//  Define macro variables to help process command line arguments
+#define ARGUMENT (*argv)
+#define OPTION (ARGUMENT + 2)
+#define VALUE (separator + 1)
+
 //  Process command line arguments
-int main(int argc, char* argv[])
+int main(int argc, String argv[])
 {
 	term_put_term_set(NULL);
-	term_put_term_colors_set(NULL);
+	term_put_term_color_count_set(NULL);
 
 	for(argv++; --argc > 0; argv++)
 	{
-		char* separator = strchr(ARGUMENT, '=');
+		String separator = strchr(ARGUMENT, '=');
+		if(separator != NULL)
+			*separator = '\0';
 
 		if(ARGUMENT[0] == '-')
 			if(ARGUMENT[1] == '-')
-				if(STRNCMP(OPTION, "help") == 0)
+				if(strcmp(OPTION, "help") == 0)
 					term_put_usage();
-				else if(STRNCMP(OPTION, "usage") == 0)
+				else if(strcmp(OPTION, "usage") == 0)
 					term_put_usage();
-				else if(STRNCMP(OPTION, "version") == 0)
+				else if(strcmp(OPTION, "version") == 0)
 					term_put_version();
-				else if(STRNCMP(OPTION, "term") == 0)
+				else if(strcmp(OPTION, "term") == 0)
 					if(separator == NULL)
-						term_put_error_option_malformed(ARGUMENT);
+						term_put_error_option_incomplete(OPTION);
 					else
 						term_put_term_set(VALUE);
-				else if(STRNCMP(OPTION, "colors") == 0)
+				else if(strcmp(OPTION, "colors") == 0)
 					if(separator == NULL)
-						term_put_error_option_malformed(ARGUMENT);
+						term_put_error_option_incomplete(OPTION);
 					else
-						term_put_term_colors_set(VALUE);
+						term_put_term_color_count_set(VALUE);
+				else if(strcmp(OPTION, "extend") == 0)
+					term_put_term_color_extend = true;
 				else
-					term_put_error_option_invalid(ARGUMENT);
+					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
-					term_put_error_option_short_invalid(*ARGUMENT);
-		else if(STRNCMP(ARGUMENT, "normal") == 0)
+					if(*ARGUMENT == 'x')
+						term_put_term_color_extend = true;
+					else
+						term_put_error_option_short_invalid(*ARGUMENT);
+		else if(strcmp(ARGUMENT, "term") == 0)
+			term_put_term();
+		else if(strcmp(ARGUMENT, "colors") == 0)
+			term_put_term_color_count();
+		else if(strcmp(ARGUMENT, "normal") == 0)
 			term_put_normal();
-		else if(STRNCMP(ARGUMENT, "bold") == 0)
+		else if(strcmp(ARGUMENT, "bold") == 0)
 			term_put_bold();
-		else if(STRNCMP(ARGUMENT, "underline") == 0)
+		else if(strcmp(ARGUMENT, "underline") == 0)
 			term_put_underline();
-		else if(STRNCMP(ARGUMENT, "foreground") == 0)
-			;
-		else if(STRNCMP(ARGUMENT, "background") == 0)
-			;
-		else if(STRNCMP(ARGUMENT, "colors") == 0)
-			term_put_term_colors();
+		else if(strcmp(ARGUMENT, "foreground") == 0)
+			if(separator == NULL)
+				term_put_error_attribute_incomplete(ARGUMENT);
+			else
+				term_put_foreground(VALUE);
+		else if(strcmp(ARGUMENT, "background") == 0)
+			if(separator == NULL)
+				term_put_error_attribute_incomplete(ARGUMENT);
+			else
+				term_put_background(VALUE);
 		else
 			term_put_error_attribute_invalid(ARGUMENT);
 	}
