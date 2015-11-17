@@ -33,7 +33,7 @@
 #include <term-put-term.h>
 #include <term-put-error.h>
 
-static bool term_put_term_color_extend = false;
+static bool term_color_extend = false;
 
 //  Print term-put usage to standard error and exit
 void term_put_usage()
@@ -91,7 +91,7 @@ void term_put_foreground(String value) {
 	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value || term_color_count.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value || term_put_term_color_extend)
+	else if(0x10 <= term_color.value || term_color_extend)
 		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
@@ -107,7 +107,7 @@ void term_put_background(String value) {
 	const TermColor term_color = term_put_term_color_get(value);
 	if(!term_color.has_value || term_color_count.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value || term_put_term_color_extend)
+	else if(0x10 <= term_color.value || term_color_extend)
 		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
@@ -151,13 +151,13 @@ int main(int argc, String argv[])
 					else
 						term_put_term_color_count_set(VALUE);
 				else if(strcmp(OPTION, "extend") == 0)
-					term_put_term_color_extend = true;
+					term_color_extend = true;
 				else
 					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
 					if(*ARGUMENT == 'x')
-						term_put_term_color_extend = true;
+						term_color_extend = true;
 					else
 						term_put_error_option_short_invalid(*ARGUMENT);
 		else if(strcmp(ARGUMENT, "term") == 0)
