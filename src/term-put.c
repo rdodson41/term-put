@@ -94,7 +94,7 @@ void term_put_foreground(String value) {
 	else if(0x10 <= term_color.value || term_put_term_color_extend)
 		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
-		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value);
+		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
 	else if(0x00 <= term_color.value && term_color.value < 0x08)
 		fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
 }
@@ -110,7 +110,7 @@ void term_put_background(String value) {
 	else if(0x10 <= term_color.value || term_put_term_color_extend)
 		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
-		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value);
+		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
 	else if(0x00 <= term_color.value && term_color.value < 0x08)
 		fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
 }
