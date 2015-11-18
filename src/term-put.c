@@ -181,4 +181,6 @@ int main(int argc, String argv[])
 		else
 			term_put_error_attribute_invalid(ARGUMENT);
 	}
+
+	term_put_quit(0);
 }
