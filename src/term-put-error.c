@@ -24,43 +24,42 @@
 
 //  Include C standard header files
 #include <stdio.h>
-#include <stdlib.h>
 
 //  Include term-put header files
 #include <term-put.h>
 #include <term-put-error.h>
 
-//  Print invalid term-put option error to standard error and exit
+//  Print invalid option error to standard error and quit
 void term_put_error_option_invalid(const String option)
 {
 	fprintf(stderr, "term-put: error: \"%s\" is not a valid option\n", option);
-	exit(1);
+	term_put_quit(1);
 }
 
-//  Print incomplete term-put option error to standard error and exit
+//  Print incomplete option error to standard error and quit
 void term_put_error_option_incomplete(const String option)
 {
 	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", option);
-	exit(1);
+	term_put_quit(1);
 }
 
-//  Print invalid term-put option error to standard error and exit
+//  Print invalid option error to standard error and quit
 void term_put_error_option_short_invalid(const char option)
 {
 	fprintf(stderr, "term-put: error: \"%c\" is not a valid option\n", option);
-	exit(1);
+	term_put_quit(1);
 }
 
-//  Print invalid term-put attribute error to standard error and exit
+//  Print invalid attribute error to standard error and quit
 void term_put_error_attribute_invalid(const String attribute)
 {
 	fprintf(stderr, "term-put: error: \"%s\" is not a valid attribute\n", attribute);
-	exit(1);
+	term_put_quit(1);
 }
 
-//  Print incomplete term-put attribute error to standard error and exit
+//  Print incomplete attribute error to standard error and quit
 void term_put_error_attribute_incomplete(const String attribute)
 {
 	fprintf(stderr, "term-put: error: \"%s\" requires an argument\n", attribute);
-	exit(1);
+	term_put_quit(1);
 }

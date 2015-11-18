@@ -29,37 +29,37 @@
 #include <term-put.h>
 #include <term-put-warning.h>
 
-//  Print invalid term-put terminal type warning to standard error
+//  Print invalid terminal type warning to standard error
 void term_put_warning_term_invalid(const String term)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" is not a valid terminal type\n", term);
 }
 
-//  Print generic term-put terminal type warning to standard error
+//  Print generic terminal type warning to standard error
 void term_put_warning_term_generic(const String term)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" is a generic terminal type\n", term);
 }
 
-//  Print hard-copy term-put terminal type warning to standard error
+//  Print hard-copy terminal type warning to standard error
 void term_put_warning_term_hard_copy(const String term)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" is a hard-copy terminal type\n", term);
 }
 
-//  Print unsupported count of term-put terminal colors warning to standard error
-void term_put_warning_term_color_count_unsupported(const String term)
+//  Print unsupported terminal colors warning to standard error
+void term_put_warning_term_colors_unsupported(const String term)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" does not support terminal colors\n", term);
 }
 
-//  Print invalid count of term-put terminal colors warning to standard error
-void term_put_warning_term_color_count_invalid(const String term_color_count)
+//  Print invalid count of terminal colors warning to standard error
+void term_put_warning_term_colors_invalid(const String term_colors)
 {
-	fprintf(stderr, "term-put: warning: \"%s\" is not a valid number of terminal colors\n", term_color_count);
+	fprintf(stderr, "term-put: warning: \"%s\" is not a valid number of terminal colors\n", term_colors);
 }
 
-//  Print invalid term-put terminal color warning to standard error
+//  Print invalid terminal color warning to standard error
 void term_put_warning_term_color_invalid(const String term_color)
 {
 	fprintf(stderr, "term-put: warning: \"%s\" is not a valid terminal color\n", term_color);

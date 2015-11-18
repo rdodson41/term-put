@@ -25,29 +25,13 @@
 #ifndef TERM_PUT_TERM
 #define TERM_PUT_TERM
 
-//  Include C standard header files
-#include <stdbool.h>
-
 //  Include term-put header files
 #include <term-put.h>
 
-typedef String Term;
-
-typedef struct
-{
-	long value;
-	bool has_value;
-}
-LongOptional;
-
-typedef LongOptional TermColor;
-
 void term_put_term_set(String value);
 Term term_put_term_get();
-
-void term_put_term_color_count_set(String value);
-TermColor term_put_term_color_count_get();
-
+void term_put_term_colors_set(String value);
+TermColor term_put_term_colors_get();
 TermColor term_put_term_color_get(String value);
 
 #endif

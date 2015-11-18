@@ -28,22 +28,30 @@
 //  Include C standard header files
 #include <stdbool.h>
 
+#ifndef TERM_PUT_VERSION
+#define TERM_PUT_VERSION "(unknown)"
+#endif
+
 typedef char* String;
 
-bool term_put_verbose_get();
-bool term_put_quiet_get();
-bool term_put_term_color_extend_get();
+typedef struct
+{
+	long value;
+	bool has_value;
+}
+LongOptional;
 
+typedef String Term;
+typedef LongOptional TermColor;
+
+void term_put_quit();
 void term_put_usage();
 void term_put_version();
-
 void term_put_term();
-void term_put_term_color_count();
-
+void term_put_term_colors();
 void term_put_normal();
 void term_put_bold();
 void term_put_underline();
-
 void term_put_foreground(String value);
 void term_put_background(String value);
 

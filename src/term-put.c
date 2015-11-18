@@ -23,7 +23,6 @@
 //
 
 //  Include C standard header files
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,40 +32,27 @@
 #include <term-put-term.h>
 #include <term-put-error.h>
 
-static bool _verbose = false;
-static bool _quiet = false;
-static bool _term_color_extend = false;
-
-//  Get term-put verbose status
-bool term_put_verbose_get() {
-	return _verbose;
+//  Quit
+void term_put_quit(const int status)
+{
+	exit(status);
 }
 
-//  Get term-put quiet status
-bool term_put_quiet_get() {
-	return _quiet;
-}
-
-//  Get term-put terminal color extension status
-bool term_put_term_color_extend_get() {
-	return _term_color_extend;
-}
-
-//  Print term-put usage to standard error and exit
+//  Print usage to standard error and quit
 void term_put_usage()
 {
-	fprintf(stderr, "term-put: usage: term-put [<option>|<attribute>[=<value>]] ...\n");
-	exit(1);
+	fprintf(stderr, "term-put: usage: term-put [option|attribute] ...\n");
+	term_put_quit(1);
 }
 
-//  Print term-put version to standard error and exit
+//  Print version to standard error and quit
 void term_put_version()
 {
-	fprintf(stderr, "term-put: version: 0.0.0\n");
-	exit(1);
+	fprintf(stderr, "term-put: version: %s\n", TERM_PUT_VERSION);
+	term_put_quit(1);
 }
 
-//  Print term-put terminal type to standard output
+//  Print terminal type to standard output
 void term_put_term()
 {
 	const Term term = term_put_term_get();
@@ -74,12 +60,12 @@ void term_put_term()
 		fprintf(stdout, "%s\n", term);
 }
 
-//  Print count of term-put terminal colors to standard output
-void term_put_term_color_count()
+//  Print count of terminal colors to standard output
+void term_put_term_colors()
 {
-	const TermColor term_color_count = term_put_term_color_count_get();
-	if(term_color_count.has_value)
-		fprintf(stdout, "%ld\n", term_color_count.value);
+	const TermColor term_colors = term_put_term_colors_get();
+	if(term_colors.has_value)
+		fprintf(stdout, "%ld\n", term_colors.value);
 }
 
 //  Disable terminal text attributes
@@ -102,13 +88,13 @@ void term_put_underline()
 
 //  Set foreground terminal text color
 void term_put_foreground(String value) {
-	const TermColor term_color_count = term_put_term_color_count_get();
-	if(!term_color_count.has_value)
+	const TermColor term_colors = term_put_term_colors_get();
+	if(!term_colors.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value || term_color_count.value <= term_color.value )
+	if(!term_color.has_value || term_colors.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value || _term_color_extend)
+	else if(0x10 <= term_color.value)
 		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
@@ -118,13 +104,13 @@ void term_put_foreground(String value) {
 
 //  Set background terminal text color
 void term_put_background(String value) {
-	const TermColor term_color_count = term_put_term_color_count_get();
-	if(!term_color_count.has_value)
+	const TermColor term_colors = term_put_term_colors_get();
+	if(!term_colors.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value || term_color_count.value <= term_color.value )
+	if(!term_color.has_value || term_colors.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value || _term_color_extend)
+	else if(0x10 <= term_color.value)
 		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
@@ -141,7 +127,7 @@ void term_put_background(String value) {
 int main(int argc, String argv[])
 {
 	term_put_term_set(NULL);
-	term_put_term_color_count_set(NULL);
+	term_put_term_colors_set(NULL);
 
 	for(argv++; --argc > 0; argv++)
 	{
@@ -157,10 +143,6 @@ int main(int argc, String argv[])
 					term_put_usage();
 				else if(strcmp(OPTION, "version") == 0)
 					term_put_version();
-				else if(strcmp(OPTION, "verbose") == 0)
-					_verbose = true;
-				else if(strcmp(OPTION, "quiet") == 0)
-					_quiet = true;
 				else if(strcmp(OPTION, "term") == 0)
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
@@ -170,25 +152,16 @@ int main(int argc, String argv[])
 					if(separator == NULL)
 						term_put_error_option_incomplete(OPTION);
 					else
-						term_put_term_color_count_set(VALUE);
-				else if(strcmp(OPTION, "extend") == 0)
-					_term_color_extend = true;
+						term_put_term_colors_set(VALUE);
 				else
 					term_put_error_option_invalid(OPTION);
 			else
 				for(ARGUMENT++; *ARGUMENT != '\0'; ARGUMENT++)
-					if(*ARGUMENT == 'v')
-						_verbose = true;
-					else if(*ARGUMENT == 'q')
-						_quiet = true;
-					else if(*ARGUMENT == 'x')
-						_term_color_extend = true;
-					else
-						term_put_error_option_short_invalid(*ARGUMENT);
+					term_put_error_option_short_invalid(*ARGUMENT);
 		else if(strcmp(ARGUMENT, "term") == 0)
 			term_put_term();
 		else if(strcmp(ARGUMENT, "colors") == 0)
-			term_put_term_color_count();
+			term_put_term_colors();
 		else if(strcmp(ARGUMENT, "normal") == 0)
 			term_put_normal();
 		else if(strcmp(ARGUMENT, "bold") == 0)

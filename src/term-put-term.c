@@ -40,9 +40,9 @@
 #include <term-put-warning.h>
 
 static Term _term = NULL;
-static TermColor _term_color_count = { 0, false };
+static TermColor _term_colors = { 0, false };
 
-//  Set term-put terminal type
+//  Set terminal type
 void term_put_term_set(String value)
 {
 	if(value == NULL)
@@ -56,9 +56,9 @@ void term_put_term_set(String value)
 	if(status == OK)
 	{
 		_term = value;
-		_term_color_count = (TermColor) { tigetnum("colors"), true };
-		if(_term_color_count.value < 0)
-			term_put_warning_term_color_count_unsupported(value);
+		_term_colors = (TermColor) { tigetnum("colors"), true };
+		if(_term_colors.value < 0)
+			term_put_warning_term_colors_unsupported(value);
 	}
 	else if(status == ERR)
 	{
@@ -71,14 +71,14 @@ void term_put_term_set(String value)
 	}
 }
 
-//  Get term-put terminal type
+//  Get terminal type
 Term term_put_term_get()
 {
 	return _term;
 }
 
-//  Set count of term-put terminal colors
-void term_put_term_color_count_set(String value)
+//  Set count of terminal colors
+void term_put_term_colors_set(String value)
 {
 	if(value == NULL)
 	{
@@ -88,20 +88,20 @@ void term_put_term_color_count_set(String value)
 	}
 	errno = 0;
 	String value_end;
-	const TermColor term_color_count = { strtol(value, &value_end, 0), true };
+	const TermColor term_colors = { strtol(value, &value_end, 0), true };
 	if(errno == EINVAL || value_end[0] != '\0')
-		term_put_warning_term_color_count_invalid(value);
+		term_put_warning_term_colors_invalid(value);
 	else
-		_term_color_count = term_color_count;
+		_term_colors = term_colors;
 }
 
-//  Get count of term-put terminal colors
-TermColor term_put_term_color_count_get()
+//  Get count of terminal colors
+TermColor term_put_term_colors_get()
 {
-	return _term_color_count;
+	return _term_colors;
 }
 
-//  Get term-put terminal color
+//  Get terminal color
 TermColor term_put_term_color_get(String value) {
 	if(value == NULL)
 		return (TermColor) { 0x00, false };
