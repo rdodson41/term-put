@@ -140,7 +140,7 @@ TermColor term_put_term_color_get(String value) {
 	errno = 0;
 	String value_end;
 	const TermColor term_color = { strtol(value, &value_end, 0), true };
-	if(errno == EINVAL || value_end[0] != '\0')
+	if(errno == EINVAL || value[0] == '\0' || value_end[0] != '\0')
 		term_put_warning_term_color_invalid(value);
 	else
 		return term_color;
