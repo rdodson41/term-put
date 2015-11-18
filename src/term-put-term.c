@@ -89,7 +89,7 @@ void term_put_term_colors_set(String value)
 	errno = 0;
 	String value_end;
 	const TermColor term_colors = { strtol(value, &value_end, 0), true };
-	if(errno == EINVAL || value_end[0] != '\0')
+	if(errno == EINVAL || value[0] == '\0' || value_end[0] != '\0')
 		term_put_warning_term_colors_invalid(value);
 	else
 		_term_colors = term_colors;
