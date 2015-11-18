@@ -92,9 +92,9 @@ void term_put_foreground(String value) {
 	if(!term_colors.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value || term_colors.value <= term_color.value )
+	if(!term_color.has_value || term_color.value < 0 || term_colors.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value)
+	else if(0x10 <= term_colors.value)
 		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
@@ -108,9 +108,9 @@ void term_put_background(String value) {
 	if(!term_colors.has_value)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value || term_colors.value <= term_color.value )
+	if(!term_color.has_value || term_color.value < 0 || term_colors.value <= term_color.value )
 		return;
-	else if(0x10 <= term_color.value)
+	else if(0x10 <= term_colors.value)
 		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
 	else if(0x08 <= term_color.value && term_color.value < 0x10)
 		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
