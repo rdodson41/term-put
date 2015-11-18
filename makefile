@@ -27,6 +27,9 @@
 #  Set shell to bash
 SHELL = bash -o pipefail
 
+#  Set version
+version = $(shell git describe --abbrev=0)
+
 #  Set absolute directories
 root =
 
@@ -82,7 +85,7 @@ $(build)/$(obj):
 
 $(build)/$(obj)/%.o: $(src)/%.c | $(build)/$(obj)
 	@echo "make: $(CC): $? -> $@" >&2
-	@$(CC) -o "$@" "-I$(src)" -c "$?" 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@$(CC) -o "$@" "-I$(src)" "-DVERSION=\"$(version)\"" -c "$?" 2>&1 | sed -e "s/^/make: cc: /" >&2
 
 #  Clean targets
 .PHONY: clean

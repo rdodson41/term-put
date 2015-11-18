@@ -29,7 +29,11 @@
 #include <stdbool.h>
 
 #ifndef TERM_PUT_VERSION
+#ifndef VERSION
 #define TERM_PUT_VERSION "(unknown)"
+#else
+#define TERM_PUT_VERSION VERSION
+#endif
 #endif
 
 typedef char* String;
