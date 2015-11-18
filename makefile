@@ -109,7 +109,7 @@ else ifeq ($(installation-type),link-symbolic)
 	@echo "make: ln: $? -> $@" >&2
 	@ln -f -s -r "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
 else
-	@echo "make: error: Invalid installation type: \"$(installation-type)\"" >&2
+	@echo "make: error: \"$(installation-type)\" is not a valid installation type" >&2
 	@exit 1
 endif
 
