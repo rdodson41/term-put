@@ -89,32 +89,32 @@ void term_put_underline()
 //  Set foreground terminal text color
 void term_put_foreground(String value) {
 	const TermColor term_colors = term_put_term_colors_get();
-	if(!term_colors.has_value)
+	if(!term_colors.has_value || term_colors.value < 0x00)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value || term_color.value < 0 || term_colors.value <= term_color.value )
+	if(!term_color.has_value || term_color.value < 0x00 || term_colors.value <= term_color.value)
 		return;
-	else if(0x10 <= term_colors.value)
+	else if(0x10 < term_colors.value)
 		fprintf(stdout, "\x1b[38;5;%ldm", term_color.value);
-	else if(0x08 <= term_color.value && term_color.value < 0x10)
+	else if(0x08 < term_colors.value && 0x08 <= term_color.value)
 		fprintf(stdout, "\x1b[%ldm", 90 + term_color.value - 0x08);
-	else if(0x00 <= term_color.value && term_color.value < 0x08)
+	else
 		fprintf(stdout, "\x1b[%ldm", 30 + term_color.value);
 }
 
 //  Set background terminal text color
 void term_put_background(String value) {
 	const TermColor term_colors = term_put_term_colors_get();
-	if(!term_colors.has_value)
+	if(!term_colors.has_value || term_colors.value < 0x00)
 		return;
 	const TermColor term_color = term_put_term_color_get(value);
-	if(!term_color.has_value || term_color.value < 0 || term_colors.value <= term_color.value )
+	if(!term_color.has_value || term_color.value < 0x00 || term_colors.value <= term_color.value)
 		return;
-	else if(0x10 <= term_colors.value)
+	else if(0x10 < term_colors.value)
 		fprintf(stdout, "\x1b[48;5;%ldm", term_color.value);
-	else if(0x08 <= term_color.value && term_color.value < 0x10)
+	else if(0x08 < term_colors.value && 0x08 <= term_color.value)
 		fprintf(stdout, "\x1b[%ldm", 100 + term_color.value - 0x08);
-	else if(0x00 <= term_color.value && term_color.value < 0x08)
+	else
 		fprintf(stdout, "\x1b[%ldm", 40 + term_color.value);
 }
 
