@@ -80,7 +80,7 @@ $(build)/$(bin):
 	@echo "make: mkdir: $@" >&2
 	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
-$(build)/$(bin)/term-put: $(build-bin-term-put-all) | $(build)/$(bin)
+$(build)/$(bin)/term-put: $(build-obj-term-put-all) | $(build)/$(bin)
 	@echo "make: $(CC): $^ -> $@" >&2
 	@$(CC) -o "$@" -lncurses $^ 2>&1 | sed -e "s/^/make: $(CC): /" >&2
 
