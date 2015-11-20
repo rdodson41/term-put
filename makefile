@@ -27,8 +27,8 @@
 #  Set shell to bash
 SHELL = bash -o pipefail
 
-#  Set version
-version = $(shell git describe --abbrev=0)
+#  Set version to most recent git tag
+version = $(shell git describe)
 
 #  Set absolute directories
 root =
@@ -36,26 +36,31 @@ root =
 #  Set relative directories
 bin = bin
 obj = obj
-src = src
 usr = usr
 usr-local = $(usr)/local
 
+#  Set source targets
+src = src
+src-term-put-all = $(wildcard $(src)/term-put.c $(src)/term-put-*.c)
+
 #  Set build targets
 build = build
-build-bin-term-put-all = $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(wildcard $(src)/term-put.c $(src)/term-put-*.c))
+build-obj-term-put-all = $(patsubst $(src)/%.c,$(build)/$(obj)/%.o,$(src-term-put-all))
 build-all = $(build)/$(bin)/term-put
 
 #  Set install targets
-install = $(root)/$(usr-local)
-install-all = $(patsubst $(build)/%,$(install)/%,$(build-all))
+root-usr-local-all = $(patsubst $(build)/%,$(root)/$(usr-local)/%,$(build-all))
+install-all = $(root-usr-local-all)
 
-#  Set default installation type
-installation-type = copy
-
-#  Print usage
+#  Print usage to standard error
 .PHONY: help usage
 help usage:
-	@echo "make: usage: make [ help | pull | push | build | clean | install | uninstall ]" >&2
+	@echo "make: usage: make [ help | version | pull | push | build | clean | install | uninstall ]" >&2
+
+#  Print version to standard error
+.PHONY: version
+version:
+	@echo "make: version: $(version)" >&2
 
 #  Pull repository
 .PHONY: pull
@@ -77,7 +82,7 @@ $(build)/$(bin):
 
 $(build)/$(bin)/term-put: $(build-bin-term-put-all) | $(build)/$(bin)
 	@echo "make: $(CC): $^ -> $@" >&2
-	@$(CC) -o "$@" -lncurses $^ 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@$(CC) -o "$@" -lncurses $^ 2>&1 | sed -e "s/^/make: $(CC): /" >&2
 
 $(build)/$(obj):
 	@echo "make: mkdir: $@" >&2
@@ -85,7 +90,7 @@ $(build)/$(obj):
 
 $(build)/$(obj)/%.o: $(src)/%.c | $(build)/$(obj)
 	@echo "make: $(CC): $? -> $@" >&2
-	@$(CC) -o "$@" "-I$(src)" "-DVERSION=\"$(version)\"" -c "$?" 2>&1 | sed -e "s/^/make: cc: /" >&2
+	@$(CC) -o "$@" "-I$(src)" "-DVERSION=\"$(version)\"" -c "$?" 2>&1 | sed -e "s/^/make: $(CC): /" >&2
 
 #  Clean targets
 .PHONY: clean
@@ -97,24 +102,13 @@ clean:
 .PHONY: install
 install: $(install-all)
 
-$(install)/$(bin):
+$(root)/$(usr-local)/$(bin):
 	@echo "make: mkdir: $@" >&2
 	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
-$(install)/$(bin)/%: $(build)/$(bin)/% | $(install)/$(bin)
-ifeq ($(installation-type),copy)
+$(root)/$(usr-local)/$(bin)/%: $(build)/$(bin)/% | $(root)/$(usr-local)/$(bin)
 	@echo "make: cp: $? -> $@" >&2
 	@cp -f "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
-else ifeq ($(installation-type),link-hard)
-	@echo "make: ln: $? -> $@" >&2
-	@ln -f "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
-else ifeq ($(installation-type),link-symbolic)
-	@echo "make: ln: $? -> $@" >&2
-	@ln -f -s -r "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
-else
-	@echo "make: error: \"$(installation-type)\" is not a valid installation type" >&2
-	@exit 1
-endif
 
 #  Uninstall targets
 .PHONY: uninstall
