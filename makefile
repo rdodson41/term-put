@@ -52,7 +52,7 @@ install-all = $(patsubst $(build)/%,$(install)/%,$(build-all))
 #  Set default installation type
 installation-type = copy
 
-#  Print makefile usage
+#  Print usage
 .PHONY: help usage
 help usage:
 	@echo "make: usage: make [ help | pull | push | build | clean | install | uninstall ]" >&2
