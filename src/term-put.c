@@ -60,7 +60,7 @@ void term_put_term()
 		fprintf(stdout, "%s\n", term);
 }
 
-//  Print count of terminal colors to standard output
+//  Print number of terminal colors to standard output
 void term_put_term_colors()
 {
 	const TermColor term_colors = term_put_term_colors_get();
