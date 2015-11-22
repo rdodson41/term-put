@@ -107,8 +107,8 @@ $(root)/$(usr-local)/$(bin):
 	@mkdir -p "$@" 2>&1 | sed -e "s/^/make: /" >&2
 
 $(root)/$(usr-local)/$(bin)/%: $(build)/$(bin)/% | $(root)/$(usr-local)/$(bin)
-	@echo "make: cp: $? -> $@" >&2
-	@cp -f "$?" "$@" 2>&1 | sed -e "s/^/make: /" >&2
+	@echo "make: rsync: $(build)/$(bin) -> $(root)/$(usr-local)/$(bin)" >&2
+	@rsync --verbose --archive --human-readable "$(build)/$(bin)/" "$(root)/$(usr-local)/$(bin)" 2>&1 | sed -e "s/^/make: rsync: /" >&2
 
 #  Uninstall targets
 .PHONY: uninstall
